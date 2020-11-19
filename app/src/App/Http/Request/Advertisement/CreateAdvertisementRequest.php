@@ -2,54 +2,53 @@
 
 declare(strict_types=1);
 
-namespace App\App\Http\Request\User;
+namespace App\App\Http\Request\Advertisement;
 
+use App\Domain\Common\Enum\CurrencyEnum;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class SignUpRequest
+class CreateAdvertisementRequest
 {
     /**
      * @var string
      *
      * @Assert\Type("string")
-     * @Assert\Email
      * @Assert\NotBlank
      * @Assert\Length(max="255")
      */
-    public $email;
+    public $title;
 
     /**
      * @var string
      *
      * @Assert\Type("string")
      * @Assert\NotBlank
-     * @Assert\Length(min="6", max="16")
      */
-    public $password;
+    public $description;
+
+    /**
+     * @var float
+     *
+     * @Assert\Type("numeric")
+     * @Assert\NotBlank
+     * @Assert\GreaterThan(0)
+     */
+    public $price;
 
     /**
      * @var string
      *
      * @Assert\Type("string")
      * @Assert\NotBlank
-     * @Assert\Length(max="255")
+     * @Assert\Choice(choices=CurrencyEnum::VALID_CHOICES)
      */
-    public $firstName;
+    public $currency;
 
     /**
      * @var string
      *
      * @Assert\Type("string")
      * @Assert\NotBlank
-     * @Assert\Length(max="255")
      */
-    public $lastName;
-
-    /**
-     * @var string|null
-     *
-     * @Assert\Type("string")
-     * @Assert\Length(max="255")
-     */
-    public $biography;
+    public $category;
 }

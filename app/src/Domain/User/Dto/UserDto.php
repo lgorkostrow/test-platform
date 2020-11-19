@@ -6,14 +6,29 @@ namespace App\Domain\User\Dto;
 
 class UserDto
 {
+    /**
+     * @var string
+     */
     private string $email;
 
+    /**
+     * @var string
+     */
     private string $password;
 
+    /**
+     * @var string
+     */
     private string $firstName;
 
+    /**
+     * @var string
+     */
     private string $lastName;
 
+    /**
+     * @var string|null
+     */
     private ?string $biography;
 
     public function __construct(string $email, string $password, string $firstName, string $lastName, ?string $biography)

@@ -11,16 +11,16 @@ use Ramsey\Uuid\Uuid;
 
 class SignUpCommandFactory
 {
-    public static function createFromSignUpRequest(SignUpRequest $request)
+    public static function createFromSignUpRequest(SignUpRequest $request): SignUpCommand
     {
         return new SignUpCommand(
             Uuid::uuid4()->toString(),
             new UserDto(
-                $request->getEmail(),
-                $request->getPassword(),
-                $request->getFirstName(),
-                $request->getLastName(),
-                $request->getBiography(),
+                $request->email,
+                $request->password,
+                $request->firstName,
+                $request->lastName,
+                $request->biography,
             ),
         );
     }

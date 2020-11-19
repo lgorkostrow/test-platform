@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\User\Entity;
 
+use App\Domain\Common\Entity\Timestampable;
+use App\Domain\Common\Entity\TimestampableInterface;
 use App\Domain\User\UserInterface;
 use App\Domain\User\ValueObject\PersonalData;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,8 +13,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Infrastructure\User\Repository\Doctrine\UserRepository")
  */
-class User implements UserInterface
+class User implements UserInterface, TimestampableInterface
 {
+    use Timestampable;
+
     /**
      * @var string
      *
