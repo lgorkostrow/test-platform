@@ -35,7 +35,7 @@ class UserFactory
      */
     public function create(string $id, UserDto $dto): User
     {
-        $user = new User(
+        $user = User::createUser(
             $id,
             new PersonalData(
                 $dto->getFirstName(),

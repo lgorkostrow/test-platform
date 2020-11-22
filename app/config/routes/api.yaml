@@ -2,3 +2,10 @@ api:
     resource: ../../src/App/Controller/
     type: annotation
     prefix: /api
+
+api_login_check:
+    path: /api/login
+
+gesdinet_jwt_refresh_token:
+    path:       /api/refresh-token
+    controller: gesdinet.jwtrefreshtoken::refresh

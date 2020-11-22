@@ -8,10 +8,16 @@ use App\App\Converter\DtoConverter;
 use App\App\Factory\Command\CreateAdvertisementCommandFactory;
 use App\App\Http\Request\Advertisement\CreateAdvertisementRequest;
 use App\App\Service\ValidationService;
+use App\Domain\Advertisement\Entity\Advertisement;
+use App\Domain\Advertisement\UseCase\ArchiveAdvertisementCommand;
+use App\Domain\Advertisement\UseCase\PublishAdvertisementCommand;
+use App\Domain\Advertisement\UseCase\SendAdvertisementToReviewCommand;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
+use App\App\Enum\PermissionEnum;
 
 /**
  * @Rest\Route(path="/advertisement")
@@ -49,5 +55,53 @@ class AdvertisementController extends AbstractFOSRestController
         $this->commandBus->dispatch($command);
 
         return ['id' => $command->getId()];
+    }
+
+    /**
+     * @Rest\Post(path="/{id}/send-to-review")
+     *
+     * @IsGranted(attributes=PermissionEnum::ADVERTISEMENT_SEND_TO_REVIEW, subject="advertisement")
+     *
+     * @Rest\View
+     *
+     * @param Advertisement $advertisement
+     */
+    public function sendToReview(Advertisement $advertisement)
+    {
+        $this->commandBus->dispatch(
+            new SendAdvertisementToReviewCommand($advertisement->getId())
+        );
+    }
+
+    /**
+     * @Rest\Post(path="/{id}/publish")
+     *
+     * @IsGranted(attributes=PermissionEnum::ADVERTISEMENT_PUBLISH, subject="advertisement")
+     *
+     * @Rest\View
+     *
+     * @param Advertisement $advertisement
+     */
+    public function publish(Advertisement $advertisement)
+    {
+        $this->commandBus->dispatch(
+            new PublishAdvertisementCommand($advertisement->getId())
+        );
+    }
+
+    /**
+     * @Rest\Post(path="/{id}/archive")
+     *
+     * @IsGranted(attributes=PermissionEnum::ADVERTISEMENT_ARCHIVE, subject="advertisement")
+     *
+     * @Rest\View
+     *
+     * @param Advertisement $advertisement
+     */
+    public function archive(Advertisement $advertisement)
+    {
+        $this->commandBus->dispatch(
+            new ArchiveAdvertisementCommand($advertisement->getId())
+        );
     }
 }

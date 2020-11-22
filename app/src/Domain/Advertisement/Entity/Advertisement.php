@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\Advertisement\Entity;
 
+use App\Domain\Advertisement\Event\AdvertisementCreatedEvent;
 use App\Domain\Advertisement\State\Advertisement\ArchivedState;
 use App\Domain\Advertisement\State\Advertisement\DraftState;
 use App\Domain\Advertisement\State\Advertisement\OnReviewState;
@@ -11,6 +12,8 @@ use App\Domain\Advertisement\State\Advertisement\PublishedState;
 use App\Domain\Advertisement\ValueObject\AdvertisementDescription;
 use App\Domain\Common\Entity\Timestampable;
 use App\Domain\Common\Entity\TimestampableInterface;
+use App\Domain\Common\Event\RaiseEventsInterface;
+use App\Domain\Common\Event\RaiseEventsTrait;
 use App\Domain\Common\Exception\BusinessException;
 use App\Domain\Common\State\AbstractState;
 use App\Domain\Common\ValueObject\Price;
@@ -20,9 +23,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  */
-class Advertisement implements TimestampableInterface
+class Advertisement implements TimestampableInterface, RaiseEventsInterface
 {
     use Timestampable;
+    use RaiseEventsTrait;
 
     /**
      * @var string
@@ -80,6 +84,16 @@ class Advertisement implements TimestampableInterface
         $this->price = $price;
         $this->category = $category;
         $this->author = $author;
+
+        $this->raise(new AdvertisementCreatedEvent($id));
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     public function sendToReview(): void
@@ -117,10 +131,15 @@ class Advertisement implements TimestampableInterface
         return $this->state instanceof ArchivedState;
     }
 
+    public function isAuthor(User $user): bool
+    {
+        return $user === $this->author;
+    }
+
     private function changeState(AbstractState $state)
     {
         if (!$this->state->canBeChangedTo($state)) {
-            throw new BusinessException();
+            throw new BusinessException('NOT_ACCEPTABLE_STATE');
         }
 
         $this->state = $state;

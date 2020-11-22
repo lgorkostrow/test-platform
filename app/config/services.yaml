@@ -4,7 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-
+    frontend_urls:
+        user_verification: '%env(USER_VERIFICATION_URL)%'
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -19,6 +20,10 @@ services:
         App\Domain\Common\Message\CommandHandlerInterface:
             tags:
                 - { name: messenger.message_handler, bus: messenger.bus.command }
+
+        App\Domain\Common\Event\DomainEventHandlerInterface:
+            tags:
+                - { name: messenger.message_handler, bus: messenger.bus.event }
 
 
     # makes classes in src/ available to be used as services
@@ -51,3 +56,20 @@ services:
     App\App\EventListener\Kernel\KernelExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
+
+    App\App\EventSubscriber\DomainEventsCollector:
+        tags:
+            - { name: doctrine.event_subscriber }
+
+    App\App\EventListener\Doctrine\TimestampsFiller:
+        tags:
+            - { name: doctrine.event_listener, event: onFlush }
+
+    # services
+    App\Domain\Common\Service\FrontendUrlsGenerator:
+        arguments:
+            $frontendUrls: '%frontend_urls%'
+
+    App\Infrastructure\Common\Service\EmailSender:
+        arguments:
+            $from: '%env(MAIL_FROM)%'

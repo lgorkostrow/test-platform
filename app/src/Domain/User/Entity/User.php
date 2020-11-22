@@ -6,6 +6,10 @@ namespace App\Domain\User\Entity;
 
 use App\Domain\Common\Entity\Timestampable;
 use App\Domain\Common\Entity\TimestampableInterface;
+use App\Domain\Common\Event\RaiseEventsInterface;
+use App\Domain\Common\Event\RaiseEventsTrait;
+use App\Domain\User\Enum\RoleEnum;
+use App\Domain\User\Event\UserCreatedEvent;
 use App\Domain\User\UserInterface;
 use App\Domain\User\ValueObject\PersonalData;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,9 +17,10 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Infrastructure\User\Repository\Doctrine\UserRepository")
  */
-class User implements UserInterface, TimestampableInterface
+class User implements UserInterface, TimestampableInterface, RaiseEventsInterface
 {
     use Timestampable;
+    use RaiseEventsTrait;
 
     /**
      * @var string
@@ -47,23 +52,56 @@ class User implements UserInterface, TimestampableInterface
     private ?string $confirmationToken;
 
     /**
+     * @var array|string
+     *
+     * @ORM\Column(type="json")
+     */
+    private array $roles;
+
+    /**
      * @var bool
      *
      * @ORM\Column(type="boolean")
      */
     private bool $emailConfirmed;
 
-    public function __construct(string $id, PersonalData $personalData, string $confirmationToken)
+    private function __construct(string $id, PersonalData $personalData, string $confirmationToken, array $roles)
     {
         $this->id = $id;
         $this->personalData = $personalData;
         $this->confirmationToken = $confirmationToken;
+        $this->roles = $roles;
         $this->emailConfirmed = false;
+
+        $this->raise(new UserCreatedEvent($id));
     }
 
-    public function getRoles()
+    public static function createUser(string $id, PersonalData $personalData, string $confirmationToken)
     {
-        return [];
+        return new self(
+            $id,
+            $personalData,
+            $confirmationToken,
+            [RoleEnum::ROLE_USER],
+        );
+    }
+
+    public static function createAdmin(string $id, PersonalData $personalData, string $confirmationToken)
+    {
+        return new self(
+            $id,
+            $personalData,
+            $confirmationToken,
+            [RoleEnum::ROLE_ADMIN, RoleEnum::ROLE_USER, RoleEnum::ROLE_MANAGER],
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        return $this->roles;
     }
 
     /**
@@ -108,6 +146,22 @@ class User implements UserInterface, TimestampableInterface
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->personalData->getEmail();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
     public function verify(): void
     {
         $this->emailConfirmed = true;
@@ -120,5 +174,29 @@ class User implements UserInterface, TimestampableInterface
     public function isEmailConfirmed(): bool
     {
         return $this->emailConfirmed;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManager(): bool
+    {
+        return in_array(RoleEnum::ROLE_MANAGER, $this->roles);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return in_array(RoleEnum::ROLE_ADMIN, $this->roles);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isManagerOrAdmin(): bool
+    {
+        return $this->isManager() || $this->isAdmin();
     }
 }

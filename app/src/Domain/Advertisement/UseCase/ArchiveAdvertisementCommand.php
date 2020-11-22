@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Advertisement\Event;
+namespace App\Domain\Advertisement\UseCase;
 
-use App\Domain\Common\Event\DomainEventInterface;
+use App\Domain\Common\Message\AsyncMessageInterface;
 
-class AdvertisementCreatedEvent implements DomainEventInterface
+class ArchiveAdvertisementCommand implements AsyncMessageInterface
 {
     /**
      * @var string
      */
     private string $advertisementId;
 
-    public function __construct($advertisementId)
+    public function __construct(string $advertisementId)
     {
         $this->advertisementId = $advertisementId;
     }

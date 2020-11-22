@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domain\User\Event;
 
-class UserCreatedEvent
+use App\Domain\Common\Event\DomainEventInterface;
+
+class UserCreatedEvent implements DomainEventInterface
 {
     /**
      * @var string
