@@ -17,4 +17,9 @@ class DraftState extends AbstractState
         OnReviewState::class,
         ArchivedState::class,
     ];
+
+    public function allowsModification(): bool
+    {
+        return true;
+    }
 }

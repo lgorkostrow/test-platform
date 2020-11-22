@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\App\Http\Request\Advertisement;
 
+use App\App\Validator\Constraints\EntityExists;
 use App\Domain\Common\Enum\CurrencyEnum;
+use App\Domain\Advertisement\Entity\Category;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateAdvertisementRequest
@@ -49,6 +51,8 @@ class CreateAdvertisementRequest
      *
      * @Assert\Type("string")
      * @Assert\NotBlank
+     *
+     * @EntityExists(class=Category::class)
      */
     public $category;
 }

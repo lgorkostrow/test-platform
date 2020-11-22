@@ -4,8 +4,17 @@ declare(strict_types=1);
 
 namespace App\App\Http\Request\User;
 
+use App\App\Validator\Constraints as AppAssert;
+use App\Domain\User\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @AppAssert\UniqueDto(
+ *     fields={"email": "personalData.email"},
+ *     mapToEntityClass=User::class,
+ *     errorPath="email"
+ * )
+ */
 class SignUpRequest
 {
     /**
