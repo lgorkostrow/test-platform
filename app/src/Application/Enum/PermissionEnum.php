@@ -1,0 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Application\Enum;
+
+class PermissionEnum
+{
+    const ADVERTISEMENT_EDIT = 'ADVERTISEMENT_EDIT';
+    const ADVERTISEMENT_SEND_TO_REVIEW = 'ADVERTISEMENT_SEND_TO_REVIEW';
+    const ADVERTISEMENT_PUBLISH = 'ADVERTISEMENT_PUBLISH';
+    const ADVERTISEMENT_ARCHIVE = 'ADVERTISEMENT_ARCHIVE';
+}

@@ -2,7 +2,7 @@ doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
         types:
-            advertisement_state: App\App\Doctrine\DBAL\Type\AdvertisementStateType
+            advertisement_state: App\Application\Doctrine\DBAL\Type\AdvertisementStateType
         mapping_types:
             enum: string
 

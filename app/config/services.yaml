@@ -38,8 +38,8 @@ services:
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\App\Controller\:
-        resource: '../src/App/Controller/'
+    App\Application\Controller\:
+        resource: '../src/Application/Controller/'
         tags: ['controller.service_arguments']
 
     #JWT
@@ -48,20 +48,20 @@ services:
     Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManager: '@gesdinet.jwtrefreshtoken.refresh_token_manager'
 
     gesdinet.jwtrefreshtoken.refresh_token_manager:
-        class:  App\App\Manager\RefreshTokenManager
+        class:  App\Application\Manager\RefreshTokenManager
         public: true
         arguments: [ '@gesdinet.jwtrefreshtoken.object_manager', '%gesdinet.jwtrefreshtoken.refresh_token.class%' ]
 
     # listeners
-    App\App\EventListener\Kernel\KernelExceptionListener:
+    App\Application\EventListener\Kernel\KernelExceptionListener:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
-    App\App\EventSubscriber\DomainEventsCollector:
+    App\Application\EventSubscriber\DomainEventsCollector:
         tags:
             - { name: doctrine.event_subscriber }
 
-    App\App\EventListener\Doctrine\TimestampsFiller:
+    App\Application\EventListener\Doctrine\TimestampsFiller:
         tags:
             - { name: doctrine.event_listener, event: onFlush }
 

@@ -37,6 +37,9 @@ class SendConfirmationEmailToUser implements DomainEventHandlerInterface
     public function __invoke(UserCreatedEvent $event)
     {
         $user = $this->repository->find($event->getUserId());
+        if ($user->isEmailConfirmed()) {
+            return;
+        }
 
         $body = $this->emailSender->generateBody(
             'mails/user_verification.html.twig',
