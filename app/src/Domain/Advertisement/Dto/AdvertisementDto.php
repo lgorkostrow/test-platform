@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Advertisement\Dto;
 
+use App\Domain\File\Dto\FileDto;
+
 class AdvertisementDto
 {
     /**
@@ -36,13 +38,19 @@ class AdvertisementDto
      */
     private string $userId;
 
+    /**
+     * @var array|FileDto[]
+     */
+    private array $attachments;
+
     public function __construct(
         string $title,
         string $description,
         float $price,
         string $currency,
         string $categoryId,
-        string $userId
+        string $userId,
+        array $attachments
     ) {
         $this->title = $title;
         $this->description = $description;
@@ -50,6 +58,7 @@ class AdvertisementDto
         $this->currency = $currency;
         $this->categoryId = $categoryId;
         $this->userId = $userId;
+        $this->attachments = $attachments;
     }
 
     /**
@@ -98,5 +107,13 @@ class AdvertisementDto
     public function getUserId(): string
     {
         return $this->userId;
+    }
+
+    /**
+     * @return FileDto[]|array
+     */
+    public function getAttachments(): array
+    {
+        return $this->attachments;
     }
 }

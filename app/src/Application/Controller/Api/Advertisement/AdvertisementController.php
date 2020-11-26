@@ -29,9 +29,24 @@ class AdvertisementController extends AbstractFOSRestController
      */
     private MessageBusInterface $commandBus;
 
-    public function __construct(MessageBusInterface $commandBus)
-    {
+    /**
+     * @var DtoConverter
+     */
+    private DtoConverter $converter;
+
+    /**
+     * @var ValidationService
+     */
+    private ValidationService $validationService;
+
+    public function __construct(
+        MessageBusInterface $commandBus,
+        DtoConverter $converter,
+        ValidationService $validationService
+    ) {
         $this->commandBus = $commandBus;
+        $this->converter = $converter;
+        $this->validationService = $validationService;
     }
 
     /**
@@ -40,17 +55,16 @@ class AdvertisementController extends AbstractFOSRestController
      * @Rest\View
      *
      * @param Request $request
-     * @param DtoConverter $converter
-     * @param ValidationService $validationService
+     * @param CreateAdvertisementCommandFactory $factory
      * @return array
      */
-    public function create(Request $request, DtoConverter $converter, ValidationService $validationService)
+    public function create(Request $request, CreateAdvertisementCommandFactory $factory)
     {
-        $createAdvertisementRequest = $validationService->validate(
-            $converter->convertToDto(CreateAdvertisementRequest::class, $request->request->all())
+        $createAdvertisementRequest = $this->validationService->validate(
+            $this->converter->convertToDto(CreateAdvertisementRequest::class, $request->request->all())
         );
 
-        $command = CreateAdvertisementCommandFactory::createFromRequest($createAdvertisementRequest, $this->getUser());
+        $command = $factory->createFromRequest($createAdvertisementRequest, $this->getUser());
 
         $this->commandBus->dispatch($command);
 

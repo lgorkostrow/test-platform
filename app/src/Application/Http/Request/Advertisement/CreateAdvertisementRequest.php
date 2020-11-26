@@ -7,6 +7,7 @@ namespace App\Application\Http\Request\Advertisement;
 use App\Application\Validator\Constraints\EntityExists;
 use App\Domain\Common\Enum\CurrencyEnum;
 use App\Domain\Advertisement\Entity\Category;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateAdvertisementRequest
@@ -56,4 +57,14 @@ class CreateAdvertisementRequest
      * @EntityExists(class=Category::class)
      */
     public $category;
+
+    /**
+     * @var array|UploadedFile[]
+     *
+     * @Assert\Type(type="array")
+     * @Assert\All(
+     *     @Assert\Image(maxSize="5m")
+     * )
+     */
+    public $attachments;
 }

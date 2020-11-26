@@ -17,7 +17,10 @@ use App\Domain\Common\Event\RaiseEventsTrait;
 use App\Domain\Common\Exception\BusinessException;
 use App\Domain\Common\State\AbstractState;
 use App\Domain\Common\ValueObject\Price;
+use App\Domain\File\Entity\File;
 use App\Domain\User\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -71,6 +74,13 @@ class Advertisement implements TimestampableInterface, RaiseEventsInterface
      */
     private User $author;
 
+    /**
+     * @var Collection<AdvertisementAttachment>
+     *
+     * @ORM\OneToMany(targetEntity=AdvertisementAttachment::class, mappedBy="advertisement", cascade={"persist"})
+     */
+    private Collection $attachments;
+
     public function __construct(
         string $id,
         AdvertisementDescription $description,
@@ -84,6 +94,8 @@ class Advertisement implements TimestampableInterface, RaiseEventsInterface
         $this->price = $price;
         $this->category = $category;
         $this->author = $author;
+
+        $this->attachments = new ArrayCollection();
 
         $this->raise(new AdvertisementCreatedEvent($id));
     }
@@ -134,6 +146,16 @@ class Advertisement implements TimestampableInterface, RaiseEventsInterface
     public function isAuthor(User $user): bool
     {
         return $user === $this->author;
+    }
+
+    public function addAttachment(File $file): self
+    {
+        $attachment = new AdvertisementAttachment($this, $file);
+        if (!$this->attachments->contains($attachment)) {
+            $this->attachments->add($attachment);
+        }
+
+        return $this;
     }
 
     private function changeState(AbstractState $state)

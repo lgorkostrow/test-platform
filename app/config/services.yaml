@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    public_dir: '%kernel.project_dir%/public/'
+    file_dir: '%kernel.project_dir%/public/files/'
     frontend_urls:
         user_verification: '%env(USER_VERIFICATION_URL)%'
 services:
@@ -65,6 +67,15 @@ services:
         tags:
             - { name: doctrine.event_listener, event: onFlush }
 
+    App\Application\EventListener\Kernel\RequestFormDataTransformer:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request }
+
+    # factory
+    App\Application\Factory\Dto\Factory\FileDtoFactory:
+        arguments:
+            $storageType: '%env(STORAGE_TYPE)%'
+
     # services
     App\Domain\Common\Service\FrontendUrlsGenerator:
         arguments:
@@ -73,3 +84,14 @@ services:
     App\Infrastructure\Common\Service\EmailSender:
         arguments:
             $from: '%env(MAIL_FROM)%'
+
+    App\Domain\File\Manager\FileManager:
+        arguments:
+            $strategies: !tagged app.strategy.content_storage
+
+    # strategies
+    App\Infrastructure\File\Strategy\Storage\LocalFileStorage:
+        arguments:
+            $fileDir: '%file_dir%'
+        tags:
+            - { name: app.strategy.content_storage }

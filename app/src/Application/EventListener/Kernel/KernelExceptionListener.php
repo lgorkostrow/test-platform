@@ -1,18 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Application\EventListener\Kernel;
 
+use App\Application\Exception\AppInformativeExceptionInterface;
 use App\Application\Http\Exception\ValidationHttpException;
+use App\Application\Http\Response\AppInformativeExceptionResponse;
 use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class KernelExceptionListener
 {
+    /**
+     * @var NormalizerInterface
+     */
+    private NormalizerInterface $normalizer;
+
+    public function __construct(NormalizerInterface $normalizer)
+    {
+        $this->normalizer = $normalizer;
+    }
+
     public function onKernelException(ExceptionEvent $event)
     {
         $request = $event->getRequest();
@@ -37,6 +52,12 @@ class KernelExceptionListener
             switch (true) {
                 case $exception instanceof ValidationHttpException:
                     $message = $this->formatValidationErrors($exception->getErrors());
+                    break;
+                case $exception instanceof AppInformativeExceptionInterface:
+                    $message = new AppInformativeExceptionResponse(
+                        $exception->getMessage(),
+                        $this->normalizer->normalize($exception->getInformation())
+                    );
                     break;
                 default:
                     $message = ['_system' => str_replace(' ', '_', mb_strtoupper($exception->getMessage()))];
