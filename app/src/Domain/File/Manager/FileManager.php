@@ -8,6 +8,7 @@ use App\Domain\File\Dto\FileDto;
 use App\Domain\File\Entity\File;
 use App\Domain\File\Factory\FileFactory;
 use App\Domain\File\Storage\FileStorageInterface;
+use App\Domain\File\Utils\FileUtils;
 use InvalidArgumentException;
 
 class FileManager
@@ -31,11 +32,12 @@ class FileManager
     public function store(FileDto $dto): File
     {
         $storage = $this->getStorage($dto->getStorageType());
+        $fileName = FileUtils::generateFileName($dto->getOriginalName(), $dto->getOriginalExtension());
 
         return $this->factory->create(
             $dto->getId(),
-            $storage->upload($dto->getPath(), $dto->getOriginalName()),
-            $dto->getOriginalName(),
+            $storage->upload($dto->getPath(), $fileName),
+            $fileName,
             $dto->getSize(),
             $dto->getMimeType(),
         );

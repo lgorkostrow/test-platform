@@ -38,4 +38,17 @@ trait AdvertisementTrait
 
         return $property->getValue($advertisement);
     }
+
+    private function getAdvertisementField(Advertisement $advertisement, string $field)
+    {
+        $reflectionClass = new \ReflectionClass(Advertisement::class);
+        if ($reflectionClass->hasProperty($field)) {
+            $property = $reflectionClass->getProperty($field);
+            $property->setAccessible(true);
+
+            return $property->getValue($advertisement);
+        }
+
+        throw new \InvalidArgumentException('Undefined field ' . $field);
+    }
 }

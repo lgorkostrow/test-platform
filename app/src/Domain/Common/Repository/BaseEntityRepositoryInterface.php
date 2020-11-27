@@ -2,8 +2,18 @@
 
 namespace App\Domain\Common\Repository;
 
+use App\Domain\Common\Exception\EntityNotFoundException;
+
 interface BaseEntityRepositoryInterface
 {
+    /**
+     * @param string $id
+     * @return object
+     *
+     * @throws EntityNotFoundException
+     */
+    public function findOrFail(string $id): object;
+
     /**
      * @param object $entity
      * @return object

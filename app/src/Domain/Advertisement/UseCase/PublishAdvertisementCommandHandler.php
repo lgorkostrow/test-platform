@@ -22,10 +22,7 @@ class PublishAdvertisementCommandHandler implements CommandHandlerInterface
 
     public function __invoke(PublishAdvertisementCommand $command)
     {
-        if (null === $advertisement = $this->repository->find($command->getAdvertisementId())) {
-            throw new EntityNotFoundException();
-        }
-
+        $advertisement = $this->repository->findOrFail($command->getAdvertisementId());
         $advertisement->publish();
 
         $this->repository->save($advertisement);

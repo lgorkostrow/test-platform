@@ -25,6 +25,7 @@ class FileDtoFactory
             $id,
             $this->storageType,
             $file->getClientOriginalName(),
+            $file->getClientOriginalExtension(),
             $file->getRealPath(),
             $file->getMimeType(),
             $file->getSize(),

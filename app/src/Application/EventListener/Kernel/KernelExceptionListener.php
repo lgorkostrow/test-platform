@@ -7,6 +7,8 @@ namespace App\Application\EventListener\Kernel;
 use App\Application\Exception\AppInformativeExceptionInterface;
 use App\Application\Http\Exception\ValidationHttpException;
 use App\Application\Http\Response\AppInformativeExceptionResponse;
+use App\Application\Utils\ValidatorUtils;
+use FOS\RestBundle\Exception\InvalidParameterException;
 use FOS\RestBundle\FOSRestBundle;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +16,7 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class KernelExceptionListener
@@ -52,6 +55,11 @@ class KernelExceptionListener
             switch (true) {
                 case $exception instanceof ValidationHttpException:
                     $message = $this->formatValidationErrors($exception->getErrors());
+                    break;
+                case $exception instanceof InvalidParameterException:
+                    $message = $this->formatValidationErrors(
+                        $this->formatParamFetcherErrors($exception)
+                    );
                     break;
                 case $exception instanceof AppInformativeExceptionInterface:
                     $message = new AppInformativeExceptionResponse(
@@ -98,5 +106,12 @@ class KernelExceptionListener
         }
 
         return $errors;
+    }
+
+    private function formatParamFetcherErrors(InvalidParameterException $exception): ConstraintViolationList
+    {
+        return new ConstraintViolationList(array_map(function (ConstraintViolation $item) use ($exception) {
+            return ValidatorUtils::rebuildViolationWithPropertyPath($item, $exception->getParameter()->getName());
+        }, (array)$exception->getViolations()->getIterator()));
     }
 }

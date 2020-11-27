@@ -65,6 +65,8 @@ class CreateAdvertisementRequest
      * @Assert\All(
      *     @Assert\Image(maxSize="5m")
      * )
+     * @Assert\Count(min=1, max=10)
+     * @Assert\NotBlank
      */
     public $attachments;
 }

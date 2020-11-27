@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\EventListener\Kernel;
 
+use App\Application\Exception\FilesNotMappedException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -15,6 +16,10 @@ class RequestFormDataTransformer
         $request = $event->getRequest();
 
         if (!$request->isMethod(Request::METHOD_POST)) {
+            return;
+        }
+
+        if (!$request->headers->has('CONTENT_TYPE')) {
             return;
         }
 
@@ -40,7 +45,6 @@ class RequestFormDataTransformer
             });
 
             if (!empty($files)) {
-                throw new BadRequestHttpException('Field data is required');
                 throw new FilesNotMappedException(array_keys($files));
             }
         }

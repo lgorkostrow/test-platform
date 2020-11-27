@@ -13,13 +13,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AbstractRestTestCase extends AbstractWebTestCase
 {
-    /**  @var JWTTokenManagerInterface */
-    protected $jwtManager;
+    /**  @var JWTTokenManagerInterface|null */
+    protected ?JWTTokenManagerInterface $jwtManager;
 
-    /** @var RequestStack */
-    private $requestStack;
-
-    protected $useTransaction = true;
+    /** @var RequestStack|null */
+    private ?RequestStack $requestStack;
 
     public function setUp()
     {
@@ -93,6 +91,29 @@ class AbstractRestTestCase extends AbstractWebTestCase
             [],
             $headers,
             ($method !== Request::METHOD_GET && $data) ? json_encode($data) : null
+        );
+
+        return $this->client->getResponse();
+    }
+
+    protected function sendFormDataRequest(
+        string $resource,
+        array $data = [],
+        array $files = [],
+        array $headers = [],
+        string $apiToken = null
+    ): Response {
+        $headers = array_merge([
+            'CONTENT_TYPE' => 'multipart/form-data',
+            'HTTP_AUTHORIZATION' => $apiToken ? 'Bearer '.$apiToken : '',
+        ], $headers);
+
+        $this->client->request(
+            'POST',
+            $resource,
+            $data,
+            $files,
+            $headers
         );
 
         return $this->client->getResponse();

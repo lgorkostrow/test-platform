@@ -12,4 +12,10 @@ interface AdvertisementRepositoryInterface extends BaseEntityRepositoryInterface
      * @return Advertisement|null
      */
     public function find($id);
+
+    /**
+     * @param string $id
+     * @return Advertisement
+     */
+    public function findOrFail(string $id): object;
 }

@@ -13,7 +13,7 @@ class AdvertisementCreatedEvent implements DomainEventInterface
      */
     private string $advertisementId;
 
-    public function __construct($advertisementId)
+    public function __construct(string $advertisementId)
     {
         $this->advertisementId = $advertisementId;
     }

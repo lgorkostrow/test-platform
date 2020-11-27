@@ -28,7 +28,7 @@ class CreateAdvertisementCommandFactory
     {
         $attachments = array_map(function (UploadedFile $file) {
             return $this->fileDtoFactory->createFromUploadedFile(Uuid::uuid4()->toString(), $file);
-        }, $request->attachments);
+        }, $request->attachments ?? []);
 
         return new CreateAdvertisementCommand(
             Uuid::uuid4()->toString(),

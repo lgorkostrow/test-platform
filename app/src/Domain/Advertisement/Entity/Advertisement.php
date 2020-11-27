@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Advertisement\Entity;
 
 use App\Domain\Advertisement\Event\AdvertisementCreatedEvent;
+use App\Domain\Advertisement\Event\AdvertisementSentBackEvent;
 use App\Domain\Advertisement\State\Advertisement\ArchivedState;
 use App\Domain\Advertisement\State\Advertisement\DraftState;
 use App\Domain\Advertisement\State\Advertisement\OnReviewState;
@@ -108,9 +109,21 @@ class Advertisement implements TimestampableInterface, RaiseEventsInterface
         return $this->id;
     }
 
+    public function getTitle(): string
+    {
+        return $this->description->getTitle();
+    }
+
     public function sendToReview(): void
     {
         $this->changeState(new OnReviewState());
+    }
+
+    public function sendBack(string $reason): void
+    {
+        $this->changeState(new DraftState());
+
+        $this->raise(new AdvertisementSentBackEvent($this->getId(), $this->author->getId(), $reason));
     }
 
     public function publish(): void

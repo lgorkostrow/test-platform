@@ -19,6 +19,7 @@ class AdvertisementVoter extends Voter
                 PermissionEnum::ADVERTISEMENT_EDIT,
                 PermissionEnum::ADVERTISEMENT_SEND_TO_REVIEW,
                 PermissionEnum::ADVERTISEMENT_PUBLISH,
+                PermissionEnum::ADVERTISEMENT_SEND_BACK,
                 PermissionEnum::ADVERTISEMENT_ARCHIVE,
             ])
         ;
@@ -42,7 +43,7 @@ class AdvertisementVoter extends Voter
             return $subject->isAuthor($user);
         }
 
-        if (PermissionEnum::ADVERTISEMENT_PUBLISH === $attribute) {
+        if (in_array($attribute, [PermissionEnum::ADVERTISEMENT_PUBLISH, PermissionEnum::ADVERTISEMENT_SEND_BACK])) {
             return $user->isManagerOrAdmin();
         }
 

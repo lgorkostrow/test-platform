@@ -12,12 +12,15 @@ use App\Domain\Advertisement\Entity\Advertisement;
 use App\Domain\Advertisement\UseCase\ArchiveAdvertisementCommand;
 use App\Domain\Advertisement\UseCase\PublishAdvertisementCommand;
 use App\Domain\Advertisement\UseCase\SendAdvertisementToReviewCommand;
+use App\Domain\Advertisement\UseCase\SendBackAdvertisementCommand;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use FOS\RestBundle\Request\ParamFetcherInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
 use App\Application\Enum\PermissionEnum;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @Rest\Route(path="/advertisement")
@@ -84,6 +87,25 @@ class AdvertisementController extends AbstractFOSRestController
     {
         $this->commandBus->dispatch(
             new SendAdvertisementToReviewCommand($advertisement->getId())
+        );
+    }
+
+    /**
+     * @Rest\Post(path="/{id}/send-back")
+     *
+     * @IsGranted(attributes=PermissionEnum::ADVERTISEMENT_SEND_BACK, subject="advertisement")
+     *
+     * @Rest\RequestParam(name="reason", requirements=@Assert\Length(min=25), nullable=false, allowBlank=false, strict=true)
+     *
+     * @Rest\View
+     *
+     * @param ParamFetcherInterface $paramFetcher
+     * @param Advertisement $advertisement
+     */
+    public function sendBack(ParamFetcherInterface $paramFetcher, Advertisement $advertisement)
+    {
+        $this->commandBus->dispatch(
+            new SendBackAdvertisementCommand($advertisement->getId(), $paramFetcher->get('reason'))
         );
     }
 

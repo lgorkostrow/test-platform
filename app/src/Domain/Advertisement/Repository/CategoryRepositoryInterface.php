@@ -12,4 +12,10 @@ interface CategoryRepositoryInterface extends BaseEntityRepositoryInterface
      * @return Category|null
      */
     public function find($id);
+
+    /**
+     * @param string $id
+     * @return Category
+     */
+    public function findOrFail(string $id): object;
 }

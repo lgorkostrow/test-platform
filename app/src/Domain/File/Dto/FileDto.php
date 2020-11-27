@@ -24,6 +24,11 @@ class FileDto
     /**
      * @var string
      */
+    private string $originalExtension;
+
+    /**
+     * @var string
+     */
     private string $path;
 
     /**
@@ -40,6 +45,7 @@ class FileDto
         string $id,
         string $storageType,
         string $originalName,
+        string $originalExtension,
         string $path,
         string $mimeType,
         int $size
@@ -47,6 +53,7 @@ class FileDto
         $this->id = $id;
         $this->storageType = $storageType;
         $this->originalName = $originalName;
+        $this->originalExtension = $originalExtension;
         $this->path = $path;
         $this->mimeType = $mimeType;
         $this->size = $size;
@@ -74,6 +81,14 @@ class FileDto
     public function getOriginalName(): string
     {
         return $this->originalName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOriginalExtension(): string
+    {
+        return $this->originalExtension;
     }
 
     /**

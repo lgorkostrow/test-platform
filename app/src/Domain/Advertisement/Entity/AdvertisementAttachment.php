@@ -19,7 +19,7 @@ class AdvertisementAttachment
      * @ORM\ManyToOne(targetEntity=Advertisement::class, inversedBy="attachments")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private Advertisement $record;
+    private Advertisement $attachment;
 
     /**
      * @var File
@@ -30,18 +30,18 @@ class AdvertisementAttachment
      */
     private File $file;
 
-    public function __construct(Advertisement $record, File $file)
+    public function __construct(Advertisement $attachment, File $file)
     {
-        $this->record = $record;
+        $this->attachment = $attachment;
         $this->file = $file;
     }
 
     /**
      * @return Advertisement
      */
-    public function getRecord(): Advertisement
+    public function getAttachment(): Advertisement
     {
-        return $this->record;
+        return $this->attachment;
     }
 
     /**

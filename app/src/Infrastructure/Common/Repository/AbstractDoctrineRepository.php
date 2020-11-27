@@ -4,10 +4,22 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Common\Repository;
 
+use App\Domain\Common\Exception\EntityNotFoundException;
+use App\Domain\Common\Repository\BaseEntityRepositoryInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
-abstract class AbstractDoctrineRepository extends ServiceEntityRepository
+abstract class AbstractDoctrineRepository extends ServiceEntityRepository implements BaseEntityRepositoryInterface
 {
+    public function findOrFail(string $id): object
+    {
+        $entity = $this->find($id);
+        if (!$entity) {
+            throw new EntityNotFoundException();
+        }
+
+        return $entity;
+    }
+
     /**
      * @param object $entity
      * @return object

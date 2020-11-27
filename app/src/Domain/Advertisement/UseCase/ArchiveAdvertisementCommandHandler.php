@@ -22,10 +22,7 @@ class ArchiveAdvertisementCommandHandler implements CommandHandlerInterface
 
     public function __invoke(ArchiveAdvertisementCommand $command)
     {
-        if (null === $advertisement = $this->repository->find($command->getAdvertisementId())) {
-            throw new EntityNotFoundException();
-        }
-
+        $advertisement = $this->repository->findOrFail($command->getAdvertisementId());
         $advertisement->archive();
 
         $this->repository->save($advertisement);
