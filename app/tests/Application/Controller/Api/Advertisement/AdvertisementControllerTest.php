@@ -208,13 +208,41 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $response = $this->sendPost(
             sprintf('/api/advertisement/%s/send-back', $advertisement->getId()),
-            [],
+            [
+                'reason' => self::$faker->text,
+            ],
             [],
             $this->logIn($user->getEmail())
         );
 
         $this->assertEquals(403, $response->getStatusCode());
         $this->assertTrue($advertisement->isOnReview());
+    }
+
+    /** @test */
+    public function shouldReturnValidationErrorsOnAdvertisementSendingBack()
+    {
+        $advertisement = $this->findAdvertisementByState(new OnReviewState());
+        $user = $this->findAdmin();
+
+        $this->assertTrue($advertisement->isOnReview());
+
+        $response = $this->sendPost(
+            sprintf('/api/advertisement/%s/send-back', $advertisement->getId()),
+            [
+                'reason' => null,
+            ],
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertTrue($advertisement->isOnReview());
+        $this->assertArrayHasKey('errors', $responseData);
+        $this->assertArrayHasKey('reason', $responseData['errors']);
+        $this->assertContains('IS_BLANK_ERROR', $responseData['errors']['reason']);
     }
 
     /** @test */
