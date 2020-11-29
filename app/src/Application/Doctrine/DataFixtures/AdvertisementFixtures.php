@@ -30,13 +30,13 @@ class AdvertisementFixtures extends AbstractFixture implements DependentFixtureI
 
     public function load(ObjectManager $manager)
     {
-        $users = $this->getUsers();
-
         foreach ($this->entityManager->getRepository(Category::class)->findAll() as $category) {
-            $this->createForCategory($manager, $category, $users[array_rand($users)]);
-            $this->createForCategory($manager, $category, $users[array_rand($users)], OnReviewState::NAME);
-            $this->createForCategory($manager, $category, $users[array_rand($users)], PublishedState::NAME);
-            $this->createForCategory($manager, $category, $users[array_rand($users)], ArchivedState::NAME);
+            foreach ($this->getUsers() as $user) {
+                $this->createForCategory($manager, $category, $user);
+                $this->createForCategory($manager, $category, $user, OnReviewState::NAME);
+                $this->createForCategory($manager, $category, $user, PublishedState::NAME);
+                $this->createForCategory($manager, $category, $user, ArchivedState::NAME);
+            }
         }
 
         $manager->flush();

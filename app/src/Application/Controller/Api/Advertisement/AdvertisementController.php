@@ -6,9 +6,13 @@ namespace App\Application\Controller\Api\Advertisement;
 
 use App\Application\Converter\DtoConverter;
 use App\Application\Factory\Command\CreateAdvertisementCommandFactory;
+use App\Application\Http\Annotation\ChoiceQueryParam;
 use App\Application\Http\Request\Advertisement\CreateAdvertisementRequest;
 use App\Application\Service\ValidationService;
+use App\Application\Utils\MessengerUtils;
 use App\Domain\Advertisement\Entity\Advertisement;
+use App\Domain\Advertisement\Query\GetPublishedAdvertisementsQuery;
+use App\Domain\Advertisement\Query\GetUserAdvertisementsQuery;
 use App\Domain\Advertisement\UseCase\ArchiveAdvertisementCommand;
 use App\Domain\Advertisement\UseCase\PublishAdvertisementCommand;
 use App\Domain\Advertisement\UseCase\SendAdvertisementToReviewCommand;
@@ -21,6 +25,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
 use App\Application\Enum\PermissionEnum;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Domain\Advertisement\Enum\AdvertisementStateEnum;
+use App\Application\Validator\Constraints\EntityExists;
+use App\Domain\Advertisement\Entity\Category;
 
 /**
  * @Rest\Route(path="/advertisement")
@@ -31,6 +38,11 @@ class AdvertisementController extends AbstractFOSRestController
      * @var MessageBusInterface
      */
     private MessageBusInterface $commandBus;
+
+    /**
+     * @var MessageBusInterface
+     */
+    private MessageBusInterface $queryBus;
 
     /**
      * @var DtoConverter
@@ -44,12 +56,72 @@ class AdvertisementController extends AbstractFOSRestController
 
     public function __construct(
         MessageBusInterface $commandBus,
+        MessageBusInterface $queryBus,
         DtoConverter $converter,
         ValidationService $validationService
     ) {
         $this->commandBus = $commandBus;
+        $this->queryBus = $queryBus;
         $this->converter = $converter;
         $this->validationService = $validationService;
+    }
+
+    /**
+     * Find published advertisements
+     *
+     * @Rest\Get(path="")
+     *
+     * @Rest\QueryParam(name="limit", requirements="\d+", strict=true, default=15)
+     * @Rest\QueryParam(name="offset", requirements="\d+", strict=true, default=0)
+     * @Rest\QueryParam(name="category", strict=true, allowBlank=false, nullable=false, requirements=@EntityExists(class=Category::class))
+     * @Rest\QueryParam(name="title", strict=true, allowBlank=false, nullable=true)
+     *
+     * @Rest\View
+     *
+     * @param ParamFetcherInterface $paramFetcher
+     */
+    public function getPublished(ParamFetcherInterface $paramFetcher)
+    {
+        $envelope = $this->queryBus->dispatch(new GetPublishedAdvertisementsQuery(
+            (int)$paramFetcher->get('limit'),
+            (int)$paramFetcher->get('offset'),
+            $paramFetcher->get('category'),
+            $paramFetcher->get('title'),
+        ));
+
+        return MessengerUtils::getResultFromEnvelope($envelope);
+    }
+
+    /**
+     * @Rest\Get(path="/my")
+     *
+     * @Rest\QueryParam(name="limit", requirements="\d+", strict=true, default=15)
+     * @Rest\QueryParam(name="offset", requirements="\d+", strict=true, default=0)
+     * @Rest\QueryParam(name="category", strict=true, allowBlank=false, nullable=true, requirements=@EntityExists(class=Category::class))
+     *
+     * @ChoiceQueryParam(
+     *     name="state",
+     *     nullable=true,
+     *     requirements=@Assert\Choice(choices=AdvertisementStateEnum::VALID_CHOICES),
+     *     strict=true,
+     * )
+     *
+     * @Rest\View
+     *
+     * @param ParamFetcherInterface $paramFetcher
+     * @return array
+     */
+    public function getForCurrentUser(ParamFetcherInterface $paramFetcher)
+    {
+        $envelope = $this->queryBus->dispatch(new GetUserAdvertisementsQuery(
+            (int)$paramFetcher->get('limit'),
+            (int)$paramFetcher->get('offset'),
+            $this->getUser()->getId(),
+            $paramFetcher->get('state'),
+            $paramFetcher->get('category'),
+        ));
+
+        return MessengerUtils::getResultFromEnvelope($envelope);
     }
 
     /**

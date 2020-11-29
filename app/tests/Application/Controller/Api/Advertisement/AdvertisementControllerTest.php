@@ -22,6 +22,179 @@ class AdvertisementControllerTest extends AbstractRestTestCase
     use FileTrait;
 
     /** @test */
+    public function shouldReturnPublishedAdvertisements()
+    {
+        $user = $this->findRandomUser();
+        $category = $this->findRandomCategory();
+
+        $response = $this->sendGet(
+            sprintf('/api/advertisement?%s', http_build_query(['category' => $category->getId()])),
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('limit', $responseData);
+        $this->assertArrayHasKey('data', $responseData);
+        $this->assertNotEmpty($responseData['data']);
+
+        foreach ($responseData['data'] as $item) {
+            $this->assertArrayHasKey('id', $item);
+            $this->assertArrayHasKey('title', $item);
+            $this->assertArrayHasKey('state', $item);
+            $this->assertArrayHasKey('category', $item);
+            $this->assertArrayHasKey('price', $item);
+
+            $this->assertEquals('published', $item['state']);
+        }
+    }
+
+    /** @test */
+    public function shouldReturnValidationErrorsOnPublishedAdvertisementsList()
+    {
+        $user = $this->findRandomUser();
+
+        $response = $this->sendGet(
+            sprintf('/api/advertisement?%s', http_build_query(['category' => 'test'])),
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertArrayHasKey('errors', $responseData);
+        $this->assertArrayHasKey('category', $responseData['errors']);
+        $this->assertContains('ENTITY_NOT_FOUND', $responseData['errors']['category']);
+
+        $response = $this->sendGet(
+            sprintf('/api/advertisement?%s', http_build_query(['category' => ''])),
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertArrayHasKey('errors', $responseData);
+        $this->assertArrayHasKey('category', $responseData['errors']);
+        $this->assertContains('IS_BLANK_ERROR', $responseData['errors']['category']);
+    }
+
+    /**
+     * @test
+     *
+     * @dataProvider advertisementStateDataProvider
+     *
+     * @param string $limit
+     * @param string|null $state
+     */
+    public function shouldReturnMyAdvertisements(string $limit, ?string $state)
+    {
+        $user = $this->findRandomUser();
+
+        $response = $this->sendGet(
+            sprintf('/api/advertisement/my?%s', http_build_query([
+                'state' => $state,
+                'limit' => $limit,
+            ])),
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('limit', $responseData);
+        $this->assertEquals($responseData['limit'], $limit);
+        $this->assertArrayHasKey('data', $responseData);
+        $this->assertNotEmpty($responseData['data']);
+
+        if ($state) {
+            foreach ($responseData['data'] as $item) {
+                $this->assertArrayHasKey('id', $item);
+                $this->assertArrayHasKey('title', $item);
+                $this->assertArrayHasKey('state', $item);
+                $this->assertArrayHasKey('category', $item);
+                $this->assertArrayHasKey('price', $item);
+
+                $this->assertEquals($state, $item['state']);
+            }
+        }
+
+        $category = $this->findRandomCategory();
+
+        $response = $this->sendGet(
+            sprintf('/api/advertisement/my?%s', http_build_query([
+                'state' => $state,
+                'limit' => $limit,
+                'category' => $category->getId(),
+            ])),
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('limit', $responseData);
+        $this->assertEquals($responseData['limit'], $limit);
+        $this->assertArrayHasKey('data', $responseData);
+        $this->assertNotEmpty($responseData['data']);
+
+        if ($state) {
+            foreach ($responseData['data'] as $item) {
+                $this->assertArrayHasKey('id', $item);
+                $this->assertArrayHasKey('title', $item);
+                $this->assertArrayHasKey('state', $item);
+                $this->assertArrayHasKey('category', $item);
+                $this->assertArrayHasKey('price', $item);
+
+                $this->assertEquals($state, $item['state']);
+                $this->assertEquals($category->getId(), $item['category']['id']);
+            }
+        }
+    }
+
+    /** @test */
+    public function shouldReturnValidationErrorsOnMyAdvertisementsList()
+    {
+        $user = $this->findRandomUser();
+
+        $response = $this->sendGet(
+            sprintf('/api/advertisement/my?%s', http_build_query([
+                'category' => 'test',
+            ])),
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertArrayHasKey('errors', $responseData);
+        $this->assertArrayHasKey('category', $responseData['errors']);
+        $this->assertContains('ENTITY_NOT_FOUND', $responseData['errors']['category']);
+
+        $response = $this->sendGet(
+            sprintf('/api/advertisement/my?%s', http_build_query([
+                'state' => 'test',
+            ])),
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertArrayHasKey('errors', $responseData);
+        $this->assertArrayHasKey('state', $responseData['errors']);
+        $this->assertContains('NO_SUCH_CHOICE_ERROR', $responseData['errors']['state']);
+    }
+
+    /** @test */
     public function shouldCreateAdvertisementWithAttachment()
     {
         $user = $this->findRandomUser();
@@ -340,6 +513,32 @@ class AdvertisementControllerTest extends AbstractRestTestCase
                     'price' => 'TOO_LOW_ERROR',
                     'category' => 'INVALID_TYPE_ERROR',
                 ],
+            ],
+        ];
+    }
+
+    public function advertisementStateDataProvider(): array
+    {
+        return [
+            [
+                'limit' => 10,
+                'state' => 'draft',
+            ],
+            [
+                'limit' => 5,
+                'state' => 'on_review',
+            ],
+            [
+                'limit' => 7,
+                'state' => 'published',
+            ],
+            [
+                'limit' => 20,
+                'state' => 'archived',
+            ],
+            [
+                'limit' => 30,
+                'state' => null,
             ],
         ];
     }

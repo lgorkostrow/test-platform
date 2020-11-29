@@ -15,9 +15,27 @@ trait UserTrait
 
     private function findRandomUser(bool $verified = true): User
     {
-        return $this->entityManager->getRepository(User::class)->findOneBy([
-            'emailConfirmed' => $verified,
-        ]);
+        $qb = $this->entityManager->createQueryBuilder();
+
+        return $qb
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where(
+                $qb->expr()->andX(
+                    $qb->expr()->notLike('u.roles', ':adminRole'),
+                    $qb->expr()->notLike('u.roles', ':managerRole'),
+                )
+            )
+            ->andWhere('u.emailConfirmed = :verified')
+            ->setParameters([
+                'adminRole' => '%' . RoleEnum::ROLE_ADMIN . '%',
+                'managerRole' => '%' . RoleEnum::ROLE_MANAGER . '%',
+                'verified' => $verified,
+            ])
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
     }
 
     private function findUserExcept(User $user): User

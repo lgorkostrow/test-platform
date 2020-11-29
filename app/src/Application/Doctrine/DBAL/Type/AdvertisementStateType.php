@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Doctrine\DBAL\Type;
 
+use App\Domain\Advertisement\Mapper\StateMapper;
 use App\Domain\Advertisement\State\Advertisement\ArchivedState;
 use App\Domain\Advertisement\State\Advertisement\DraftState;
 use App\Domain\Advertisement\State\Advertisement\OnReviewState;
@@ -31,18 +32,7 @@ class AdvertisementStateType extends Type
 
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
-        switch ($value) {
-            case DraftState::NAME:
-                return new DraftState();
-            case OnReviewState::NAME:
-                return new OnReviewState();
-            case PublishedState::NAME:
-                return new PublishedState();
-            case ArchivedState::NAME:
-                return new ArchivedState();
-        }
-
-        throw new InvalidArgumentException("UNDEFINED_STATE");
+        return StateMapper::mapStateNameToObject($value);
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform)
