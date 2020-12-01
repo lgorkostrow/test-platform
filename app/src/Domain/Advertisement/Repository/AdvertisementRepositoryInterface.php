@@ -3,8 +3,11 @@
 namespace App\Domain\Advertisement\Repository;
 
 use App\Domain\Advertisement\Entity\Advertisement;
+use App\Domain\Advertisement\Query\GetAdvertisementQuery;
 use App\Domain\Advertisement\Query\GetPublishedAdvertisementsQuery;
+use App\Domain\Advertisement\Query\GetReadyForReviewAdvertisementsQuery;
 use App\Domain\Advertisement\Query\GetUserAdvertisementsQuery;
+use App\Domain\Advertisement\View\AdvertisementDetailedView;
 use App\Domain\Common\Repository\BaseEntityRepositoryInterface;
 use App\Domain\Common\Repository\PaginatedQueryResult;
 
@@ -33,4 +36,16 @@ interface AdvertisementRepositoryInterface extends BaseEntityRepositoryInterface
      * @return PaginatedQueryResult
      */
     public function findPublishedAdvertisements(GetPublishedAdvertisementsQuery $query): PaginatedQueryResult;
+
+    /**
+     * @param GetReadyForReviewAdvertisementsQuery $query
+     * @return PaginatedQueryResult
+     */
+    public function findReadyForReviewAdvertisements(GetReadyForReviewAdvertisementsQuery $query): PaginatedQueryResult;
+
+    /**
+     * @param string $id
+     * @return AdvertisementDetailedView|null
+     */
+    public function findDetailedView(string $id): ?AdvertisementDetailedView;
 }

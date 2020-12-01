@@ -4,13 +4,18 @@ namespace App\Infrastructure\Advertisement\Repository\Doctrine;
 
 use App\Domain\Advertisement\Entity\Advertisement;
 use App\Domain\Advertisement\Query\GetPublishedAdvertisementsQuery;
+use App\Domain\Advertisement\Query\GetReadyForReviewAdvertisementsQuery;
 use App\Domain\Advertisement\Query\GetUserAdvertisementsQuery;
 use App\Domain\Advertisement\Repository\AdvertisementRepositoryInterface;
+use App\Domain\Advertisement\State\Advertisement\OnReviewState;
 use App\Domain\Advertisement\State\Advertisement\PublishedState;
+use App\Domain\Advertisement\View\AdvertisementDetailedView;
 use App\Domain\Common\Repository\PaginatedQueryResult;
 use App\Infrastructure\Common\Repository\AbstractDoctrineRepository;
 use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Domain\Advertisement\View\AdvertisementListItemView;
 
 /**
  * @method Advertisement|null find($id, $lockMode = null, $lockVersion = null)
@@ -27,26 +32,14 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
 
     public function findUserAdvertisements(GetUserAdvertisementsQuery $query): PaginatedQueryResult
     {
-        $qb = $this->_em->createQueryBuilder()
-            ->select('a.id')
-            ->addSelect('a.state')
-            ->addSelect('a.description.title as title')
-            ->addSelect('a.price.value as price')
-            ->addSelect('a.price.currency as currency')
-            ->addSelect('category.id as categoryId')
-            ->addSelect('category.name as categoryName')
-            ->from(Advertisement::class, 'a')
+        $qb = $this->buildListQueryBuilder()
             ->leftJoin('a.category', 'category')
-        ;
-
-        $qb
             ->where('a.author = :authorId')
             ->setParameter('authorId', $query->getUserId())
         ;
 
         if ($query->getState()) {
             $qb
-                ->andWhere('a.state = :state')
                 ->andWhere('a.state = :state')
                 ->setParameter('state', $query->getState())
             ;
@@ -64,15 +57,7 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
 
     public function findPublishedAdvertisements(GetPublishedAdvertisementsQuery $query): PaginatedQueryResult
     {
-        $qb = $this->_em->createQueryBuilder()
-            ->select('a.id')
-            ->addSelect('a.state')
-            ->addSelect('a.description.title as title')
-            ->addSelect('a.price.value as price')
-            ->addSelect('a.price.currency as currency')
-            ->addSelect('category.id as categoryId')
-            ->addSelect('category.name as categoryName')
-            ->from(Advertisement::class, 'a')
+        $qb = $this->buildListQueryBuilder()
             ->innerJoin('a.category', 'category', Join::WITH, 'category.id = :categoryId')
             ->where('a.state = :publishedState')
             ->setParameters([
@@ -89,5 +74,56 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
         }
 
         return $this->paginate($qb, $query);
+    }
+
+    public function findReadyForReviewAdvertisements(GetReadyForReviewAdvertisementsQuery $query): PaginatedQueryResult
+    {
+        $qb = $this->buildListQueryBuilder()
+            ->leftJoin('a.category', 'category')
+            ->where('a.state = :state')
+            ->setParameter('state', OnReviewState::NAME)
+        ;
+
+        if ($query->getCategoryId()) {
+            $qb
+                ->andWhere('a.category = :categoryId')
+                ->setParameter('categoryId', $query->getCategoryId())
+            ;
+        }
+
+        return $this->paginate($qb, $query);
+    }
+
+    public function findDetailedView(string $id): ?AdvertisementDetailedView
+    {
+        return $this->_em->createQueryBuilder()
+            ->select(
+                sprintf(
+                    'NEW %s(a.id, a.description.title, a.description.description, a.price.value, a.price.currency, author.id, CONCAT(author.personalData.firstName, \'\', author.personalData.lastName), author.personalData.email, a.createdAt)',
+                    AdvertisementDetailedView::class,
+                )
+            )
+            ->from(Advertisement::class, 'a')
+            ->leftJoin('a.author', 'author')
+            ->where('a.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    private function buildListQueryBuilder(): QueryBuilder
+    {
+        return $this->_em->createQueryBuilder()
+            ->select(
+                sprintf(
+                    'NEW %s(a.id, a.description.title, a.state, category.id, category.name, a.price.value, a.price.currency, file.path)',
+                    AdvertisementListItemView::class,
+                )
+            )
+            ->from(Advertisement::class, 'a')
+            ->leftJoin('a.attachments', 'attachment', Join::WITH, 'attachment.featured = true')
+            ->leftJoin('attachment.file', 'file')
+        ;
     }
 }

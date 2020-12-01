@@ -9,37 +9,37 @@ class FileDto
     /**
      * @var string
      */
-    private string $id;
+    protected string $id;
 
     /**
      * @var string
      */
-    private string $storageType;
+    protected string $storageType;
 
     /**
      * @var string
      */
-    private string $originalName;
+    protected string $originalName;
 
     /**
      * @var string
      */
-    private string $originalExtension;
+    protected string $originalExtension;
 
     /**
      * @var string
      */
-    private string $path;
+    protected string $path;
 
     /**
      * @var string
      */
-    private string $mimeType;
+    protected string $mimeType;
 
     /**
      * @var int
      */
-    private int $size;
+    protected int $size;
 
     public function __construct(
         string $id,

@@ -7,7 +7,6 @@ namespace App\Application\Http\Request\Advertisement;
 use App\Application\Validator\Constraints\EntityExists;
 use App\Domain\Common\Enum\CurrencyEnum;
 use App\Domain\Advertisement\Entity\Category;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class CreateAdvertisementRequest
@@ -59,14 +58,20 @@ class CreateAdvertisementRequest
     public $category;
 
     /**
-     * @var array|UploadedFile[]
+     * @var AttachmentDto[]|array
      *
      * @Assert\Type(type="array")
-     * @Assert\All(
-     *     @Assert\Image(maxSize="5m")
-     * )
      * @Assert\Count(min=1, max=10)
      * @Assert\NotBlank
+     * @Assert\Valid
      */
     public $attachments;
+
+    /**
+     * @param AttachmentDto $dto
+     */
+    public function addAttachment(AttachmentDto $dto): void
+    {
+        $this->attachments[] = $dto;
+    }
 }

@@ -69,6 +69,25 @@ trait UserTrait
         ;
     }
 
+    private function findManager(): User
+    {
+        $qb = $this->entityManager->createQueryBuilder();
+
+        return $qb
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where($qb->expr()->notLike('u.roles', ':adminRole'))
+            ->andWhere($qb->expr()->like('u.roles', ':managerRole'))
+            ->setParameters([
+                'adminRole' => '%' . RoleEnum::ROLE_ADMIN . '%',
+                'managerRole' => '%' . RoleEnum::ROLE_MANAGER . '%',
+            ])
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     private function getUserPersonalData(User $user): PersonalData
     {
         $reflectionClass = new \ReflectionClass(User::class);

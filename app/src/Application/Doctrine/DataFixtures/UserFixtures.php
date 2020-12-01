@@ -15,6 +15,7 @@ class UserFixtures extends AbstractFixture
     {
         $this->createUsers($manager, 10);
         $this->createAdmins($manager, 5);
+        $this->createManagers($manager, 5);
         $this->createUsers($manager, 5, false);
 
         $manager->flush();
@@ -41,6 +42,21 @@ class UserFixtures extends AbstractFixture
     {
         for ($i = 0; $i < $count; $i++) {
             $user = User::createAdmin(
+                Uuid::uuid4()->toString(),
+                new PersonalData($this->faker->firstName, $this->faker->lastName, $this->faker->safeEmail),
+                md5(uniqid()),
+            );
+
+            $user->verify();
+
+            $manager->persist($user);
+        }
+    }
+
+    private function createManagers(ObjectManager $manager, int $count = 10)
+    {
+        for ($i = 0; $i < $count; $i++) {
+            $user = User::createManager(
                 Uuid::uuid4()->toString(),
                 new PersonalData($this->faker->firstName, $this->faker->lastName, $this->faker->safeEmail),
                 md5(uniqid()),

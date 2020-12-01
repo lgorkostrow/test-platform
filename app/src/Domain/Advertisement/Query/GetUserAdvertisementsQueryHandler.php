@@ -6,6 +6,7 @@ namespace App\Domain\Advertisement\Query;
 
 use App\Domain\Advertisement\Dto\AdvertisementListItemDto;
 use App\Domain\Advertisement\Repository\AdvertisementRepositoryInterface;
+use App\Domain\Advertisement\View\AdvertisementListItemView;
 use App\Domain\Common\Message\QueryHandlerInterface;
 use App\Domain\Common\Repository\PaginatedQueryResult;
 
@@ -25,7 +26,9 @@ class GetUserAdvertisementsQueryHandler implements QueryHandlerInterface
     {
         $paginatedData = $this->advertisementRepository->findUserAdvertisements($query);
         $paginatedData->setData(
-            array_map(fn(array $item) => AdvertisementListItemDto::createFromArray($item), $paginatedData->getData())
+            array_map(function (AdvertisementListItemView $view) {
+                return AdvertisementListItemDto::createFromAdvertisementListItemView($view);
+            }, $paginatedData->getData())
         );
 
         return $paginatedData;

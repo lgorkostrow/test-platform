@@ -195,6 +195,98 @@ class AdvertisementControllerTest extends AbstractRestTestCase
     }
 
     /** @test */
+    public function shouldReturnReadyForReviewAdvertisements()
+    {
+        $user = $this->findAdmin();
+        $category = $this->findRandomCategory();
+
+        $response = $this->sendGet(
+            sprintf('/api/advertisement/ready-for-review?%s', http_build_query(['category' => $category->getId()])),
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('limit', $responseData);
+        $this->assertArrayHasKey('data', $responseData);
+        $this->assertNotEmpty($responseData['data']);
+
+        foreach ($responseData['data'] as $item) {
+            $this->assertArrayHasKey('id', $item);
+            $this->assertArrayHasKey('title', $item);
+            $this->assertArrayHasKey('state', $item);
+            $this->assertArrayHasKey('category', $item);
+            $this->assertArrayHasKey('price', $item);
+
+            $this->assertEquals('on_review', $item['state']);
+        }
+
+        $user = $this->findManager();
+
+        $response = $this->sendGet(
+            '/api/advertisement/ready-for-review',
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('limit', $responseData);
+        $this->assertArrayHasKey('data', $responseData);
+        $this->assertNotEmpty($responseData['data']);
+
+        foreach ($responseData['data'] as $item) {
+            $this->assertArrayHasKey('id', $item);
+            $this->assertArrayHasKey('title', $item);
+            $this->assertArrayHasKey('state', $item);
+            $this->assertArrayHasKey('category', $item);
+            $this->assertArrayHasKey('price', $item);
+
+            $this->assertEquals('on_review', $item['state']);
+        }
+    }
+
+    /** @test */
+    public function shouldDenyAccessForUserOnViewingReadyForReviewAdvertisements()
+    {
+        $user = $this->findRandomUser();
+
+        $response = $this->sendGet(
+            '/api/advertisement/ready-for-review',
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $this->assertEquals(403, $response->getStatusCode());
+    }
+
+    /** @test */
+    public function shouldReturnAdvertisementDetailedView()
+    {
+        $advertisement = $this->findAdvertisementByState(new PublishedState());
+        $user = $this->getAdvertisementField($advertisement, 'author');
+
+        $response = $this->sendGet(
+            sprintf('/api/advertisement/%s', $advertisement->getId()),
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertArrayHasKey('title', $responseData);
+        $this->assertArrayHasKey('description', $responseData);
+        $this->assertArrayHasKey('price', $responseData);
+        $this->assertArrayHasKey('author', $responseData);
+        $this->assertArrayHasKey('createdAt', $responseData);
+    }
+
+    /** @test */
     public function shouldCreateAdvertisementWithAttachment()
     {
         $user = $this->findRandomUser();
@@ -206,7 +298,12 @@ class AdvertisementControllerTest extends AbstractRestTestCase
             'price' => 400,
             'currency' => 'USD',
             'category' => $category->getId(),
-            'attachments' => ['UNIQUEKEY'],
+            'attachments' => [
+                [
+                    'file' => 'UNIQUEKEY',
+                    'featured' => true,
+                ],
+            ],
         ];
 
         $response = $this->sendFormDataRequest(
@@ -466,7 +563,12 @@ class AdvertisementControllerTest extends AbstractRestTestCase
                     'price' => "null",
                     'currency' => 'test',
                     'category' => 'test',
-                    'attachments' => ['key'],
+                    'attachments' => [
+                        [
+                            'file' => 'key',
+                            'featured' => 25,
+                        ],
+                    ],
                 ],
                 'files' => [
                     'key' => $this->createUploadedTxtFile(),
@@ -477,7 +579,8 @@ class AdvertisementControllerTest extends AbstractRestTestCase
                     'price' => 'INVALID_TYPE_ERROR',
                     'currency' => 'NO_SUCH_CHOICE_ERROR',
                     'category' => 'ENTITY_NOT_FOUND',
-                    'attachments[0]' => 'INVALID_MIME_TYPE_ERROR',
+                    'attachments[0].file' => 'INVALID_MIME_TYPE_ERROR',
+                    'attachments[0].featured' => 'INVALID_TYPE_ERROR',
                 ],
             ],
             [

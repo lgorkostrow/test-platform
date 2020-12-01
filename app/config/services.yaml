@@ -75,7 +75,7 @@ services:
             - { name: kernel.event_listener, event: kernel.request }
 
     # factory
-    App\Application\Factory\Dto\Factory\FileDtoFactory:
+    App\Application\Factory\Dto\Factory\AdvertisementAttachmentDtoFactory:
         arguments:
             $storageType: '%env(STORAGE_TYPE)%'
 
@@ -98,3 +98,18 @@ services:
             $fileDir: '%file_dir%'
         tags:
             - { name: app.strategy.content_storage }
+
+    # serializer
+    Symfony\Component\Serializer\Normalizer\DateTimeNormalizer:
+        tags:
+            - { name: serializer.normalizer, priority: 5 }
+
+    App\Application\Serializer\FileNormalizer:
+        arguments:
+            $publicDir: '%public_dir%'
+        tags:
+            - { name: serializer.normalizer, priority: 2 }
+
+    App\Application\Serializer\UploadedFileDenormalizer:
+        tags:
+            - { name: serializer.normalizer, priority: 2 }

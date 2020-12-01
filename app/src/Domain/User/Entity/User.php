@@ -86,6 +86,16 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
         );
     }
 
+    public static function createManager(string $id, PersonalData $personalData, string $confirmationToken)
+    {
+        return new self(
+            $id,
+            $personalData,
+            $confirmationToken,
+            [RoleEnum::ROLE_USER, RoleEnum::ROLE_MANAGER],
+        );
+    }
+
     public static function createAdmin(string $id, PersonalData $personalData, string $confirmationToken)
     {
         return new self(

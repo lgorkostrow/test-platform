@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Advertisement\Dto;
+namespace App\Domain\Advertisement\View;
 
-use App\Domain\Advertisement\View\AdvertisementListItemView;
 use App\Domain\Common\State\AbstractState;
 
-class AdvertisementListItemDto
+class AdvertisementListItemView
 {
     /**
      * @var string
@@ -20,19 +19,29 @@ class AdvertisementListItemDto
     private string $title;
 
     /**
+     * @var AbstractState
+     */
+    private AbstractState $state;
+
+    /**
      * @var string
      */
-    private string $state;
+    private string $categoryId;
 
     /**
-     * @var CategoryListItemDto
+     * @var string
      */
-    private CategoryListItemDto $category;
+    private string $categoryName;
 
     /**
-     * @var PriceDto
+     * @var float
      */
-    private PriceDto $price;
+    private float $price;
+
+    /**
+     * @var string
+     */
+    private string $currency;
 
     /**
      * @var string|null
@@ -43,28 +52,20 @@ class AdvertisementListItemDto
         string $id,
         string $title,
         AbstractState $state,
-        CategoryListItemDto $category,
-        PriceDto $price,
+        string $categoryId,
+        string $categoryName,
+        float $price,
+        string $currency,
         ?string $featuredImage
     ) {
         $this->id = $id;
         $this->title = $title;
-        $this->state = $state::NAME;
-        $this->category = $category;
+        $this->state = $state;
+        $this->categoryId = $categoryId;
+        $this->categoryName = $categoryName;
         $this->price = $price;
+        $this->currency = $currency;
         $this->featuredImage = $featuredImage;
-    }
-
-    public static function createFromAdvertisementListItemView(AdvertisementListItemView $view): self
-    {
-        return new self(
-            $view->getId(),
-            $view->getTitle(),
-            $view->getState(),
-            new CategoryListItemDto($view->getCategoryId(), $view->getCategoryName()),
-            new PriceDto($view->getPrice(), $view->getCurrency()),
-            $view->getFeaturedImage(),
-        );
     }
 
     /**
@@ -84,27 +85,43 @@ class AdvertisementListItemDto
     }
 
     /**
-     * @return string
+     * @return AbstractState
      */
-    public function getState(): string
+    public function getState(): AbstractState
     {
         return $this->state;
     }
 
     /**
-     * @return CategoryListItemDto
+     * @return string
      */
-    public function getCategory(): CategoryListItemDto
+    public function getCategoryId(): string
     {
-        return $this->category;
+        return $this->categoryId;
     }
 
     /**
-     * @return PriceDto
+     * @return string
      */
-    public function getPrice(): PriceDto
+    public function getCategoryName(): string
+    {
+        return $this->categoryName;
+    }
+
+    /**
+     * @return float
+     */
+    public function getPrice(): float
     {
         return $this->price;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCurrency(): string
+    {
+        return $this->currency;
     }
 
     /**

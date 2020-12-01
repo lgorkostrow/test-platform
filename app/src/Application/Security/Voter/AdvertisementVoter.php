@@ -16,6 +16,7 @@ class AdvertisementVoter extends Voter
     {
         return $subject instanceof Advertisement
             && in_array($attribute, [
+                PermissionEnum::ADVERTISEMENT_VIEW,
                 PermissionEnum::ADVERTISEMENT_EDIT,
                 PermissionEnum::ADVERTISEMENT_SEND_TO_REVIEW,
                 PermissionEnum::ADVERTISEMENT_PUBLISH,
@@ -37,6 +38,11 @@ class AdvertisementVoter extends Voter
         $user = $token->getUser();
         if (!$user) {
             return false;
+        }
+
+        if (PermissionEnum::ADVERTISEMENT_VIEW === $attribute) {
+            return $subject->isPublished()
+                || (!$subject->isPublished() && ($user->isManagerOrAdmin() || $subject->isAuthor($user)));
         }
 
         if (in_array($attribute, [PermissionEnum::ADVERTISEMENT_EDIT, PermissionEnum::ADVERTISEMENT_SEND_TO_REVIEW])) {

@@ -10,7 +10,7 @@ use App\Domain\Advertisement\View\AdvertisementListItemView;
 use App\Domain\Common\Message\QueryHandlerInterface;
 use App\Domain\Common\Repository\PaginatedQueryResult;
 
-class GetPublishedAdvertisementsQueryHandler implements QueryHandlerInterface
+class GetReadyForReviewAdvertisementsQueryHandler implements QueryHandlerInterface
 {
     /**
      * @var AdvertisementRepositoryInterface
@@ -22,9 +22,9 @@ class GetPublishedAdvertisementsQueryHandler implements QueryHandlerInterface
         $this->advertisementRepository = $advertisementRepository;
     }
 
-    public function __invoke(GetPublishedAdvertisementsQuery $query): PaginatedQueryResult
+    public function __invoke(GetReadyForReviewAdvertisementsQuery $query): PaginatedQueryResult
     {
-        $paginatedData = $this->advertisementRepository->findPublishedAdvertisements($query);
+        $paginatedData = $this->advertisementRepository->findReadyForReviewAdvertisements($query);
         $paginatedData->setData(
             array_map(function (AdvertisementListItemView $view) {
                 return AdvertisementListItemDto::createFromAdvertisementListItemView($view);

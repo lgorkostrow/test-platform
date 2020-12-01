@@ -2,12 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Advertisement\Dto;
+namespace App\Domain\Advertisement\View;
 
-use App\Domain\File\Dto\FileDto;
+use DateTimeInterface;
 
-class AdvertisementDto
+class AdvertisementDetailedView
 {
+    /**
+     * @var string
+     */
+    private string $id;
+
     /**
      * @var string
      */
@@ -31,34 +36,51 @@ class AdvertisementDto
     /**
      * @var string
      */
-    private string $categoryId;
+    private string $authorId;
 
     /**
      * @var string
      */
-    private string $userId;
+    private string $authorFullName;
 
     /**
-     * @var array|AdvertisementAttachmentDto[]
+     * @var string
      */
-    private array $attachments;
+    private string $authorEmail;
+
+    /**
+     * @var DateTimeInterface
+     */
+    private DateTimeInterface $createdAt;
 
     public function __construct(
+        string $id,
         string $title,
         string $description,
         float $price,
         string $currency,
-        string $categoryId,
-        string $userId,
-        array $attachments
+        string $authorId,
+        string $authorFullName,
+        string $authorEmail,
+        DateTimeInterface $createdAt
     ) {
+        $this->id = $id;
         $this->title = $title;
         $this->description = $description;
         $this->price = $price;
         $this->currency = $currency;
-        $this->categoryId = $categoryId;
-        $this->userId = $userId;
-        $this->attachments = $attachments;
+        $this->authorId = $authorId;
+        $this->authorFullName = $authorFullName;
+        $this->authorEmail = $authorEmail;
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     /**
@@ -96,24 +118,32 @@ class AdvertisementDto
     /**
      * @return string
      */
-    public function getCategoryId(): string
+    public function getAuthorId(): string
     {
-        return $this->categoryId;
+        return $this->authorId;
     }
 
     /**
      * @return string
      */
-    public function getUserId(): string
+    public function getAuthorFullName(): string
     {
-        return $this->userId;
+        return $this->authorFullName;
     }
 
     /**
-     * @return AdvertisementAttachmentDto[]|array
+     * @return string
      */
-    public function getAttachments(): array
+    public function getAuthorEmail(): string
     {
-        return $this->attachments;
+        return $this->authorEmail;
+    }
+
+    /**
+     * @return DateTimeInterface
+     */
+    public function getCreatedAt(): DateTimeInterface
+    {
+        return $this->createdAt;
     }
 }

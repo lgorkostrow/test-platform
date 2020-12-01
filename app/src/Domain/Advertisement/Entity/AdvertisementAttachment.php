@@ -19,7 +19,7 @@ class AdvertisementAttachment
      * @ORM\ManyToOne(targetEntity=Advertisement::class, inversedBy="attachments")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    private Advertisement $attachment;
+    private Advertisement $advertisement;
 
     /**
      * @var File
@@ -30,18 +30,36 @@ class AdvertisementAttachment
      */
     private File $file;
 
-    public function __construct(Advertisement $attachment, File $file)
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default": 0})
+     */
+    private bool $featured;
+
+    private function __construct(Advertisement $advertisement, File $file, bool $featured = false)
     {
-        $this->attachment = $attachment;
+        $this->advertisement = $advertisement;
         $this->file = $file;
+        $this->featured = $featured;
+    }
+
+    public static function create(Advertisement $attachment, File $file): self
+    {
+        return new self($attachment, $file);
+    }
+
+    public static function createFeatured(Advertisement $attachment, File $file): self
+    {
+        return new self($attachment, $file, true);
     }
 
     /**
      * @return Advertisement
      */
-    public function getAttachment(): Advertisement
+    public function getAdvertisement(): Advertisement
     {
-        return $this->attachment;
+        return $this->advertisement;
     }
 
     /**
@@ -50,5 +68,13 @@ class AdvertisementAttachment
     public function getFile(): File
     {
         return $this->file;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFeatured(): bool
+    {
+        return $this->featured;
     }
 }

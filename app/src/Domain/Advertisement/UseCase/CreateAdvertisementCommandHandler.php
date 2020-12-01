@@ -40,7 +40,7 @@ class CreateAdvertisementCommandHandler implements CommandHandlerInterface
     {
         $advertisement = $this->factory->create($command->getId(), $command->getDto());
         foreach ($command->getDto()->getAttachments() as $fileDto) {
-            $advertisement->addAttachment($this->fileManager->store($fileDto));
+            $advertisement->addAttachment($this->fileManager->store($fileDto), $fileDto->isFeatured());
         }
 
         $this->advertisementRepository->save($advertisement);
