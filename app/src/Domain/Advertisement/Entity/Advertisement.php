@@ -161,9 +161,11 @@ class Advertisement implements TimestampableInterface, RaiseEventsInterface
         return $user === $this->author;
     }
 
-    public function addAttachment(File $file): self
+    public function addAttachment(File $file, bool $featured): self
     {
-        $attachment = new AdvertisementAttachment($this, $file);
+        $attachment = $featured
+            ? AdvertisementAttachment::createFeatured($this, $file)
+            : AdvertisementAttachment::create($this, $file);
         if (!$this->attachments->contains($attachment)) {
             $this->attachments->add($attachment);
         }

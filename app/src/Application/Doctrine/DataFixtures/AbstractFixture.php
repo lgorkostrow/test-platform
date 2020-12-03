@@ -10,7 +10,6 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 use Faker\Generator;
-use function Doctrine\ORM\QueryBuilder;
 
 abstract class AbstractFixture extends Fixture
 {

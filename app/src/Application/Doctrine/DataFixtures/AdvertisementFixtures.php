@@ -30,8 +30,9 @@ class AdvertisementFixtures extends AbstractFixture implements DependentFixtureI
 
     public function load(ObjectManager $manager)
     {
-        foreach ($this->entityManager->getRepository(Category::class)->findAll() as $category) {
-            foreach ($this->getUsers() as $user) {
+        $categories = $this->entityManager->getRepository(Category::class)->findAll();
+        foreach ($this->getUsers() as $user) {
+            foreach ($categories as $category) {
                 $this->createForCategory($manager, $category, $user);
                 $this->createForCategory($manager, $category, $user, OnReviewState::NAME);
                 $this->createForCategory($manager, $category, $user, PublishedState::NAME);

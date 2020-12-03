@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Advertisement\Dto;
+namespace App\Domain\Advertisement\View;
 
-use App\Domain\Advertisement\View\CategoryListItemView;
-
-class CategoryListItemDto
+class CategoryListItemView
 {
     /**
      * @var string
@@ -22,11 +20,6 @@ class CategoryListItemDto
     {
         $this->id = $id;
         $this->name = $name;
-    }
-
-    public static function createFromView(CategoryListItemView $view): self
-    {
-        return new self($view->getId(), $view->getName());
     }
 
     /**

@@ -3,7 +3,9 @@
 namespace App\Domain\Advertisement\Repository;
 
 use App\Domain\Advertisement\Entity\Category;
+use App\Domain\Advertisement\Query\GetCategoriesQuery;
 use App\Domain\Common\Repository\BaseEntityRepositoryInterface;
+use App\Domain\Common\Repository\PaginatedQueryResult;
 
 interface CategoryRepositoryInterface extends BaseEntityRepositoryInterface
 {
@@ -18,4 +20,10 @@ interface CategoryRepositoryInterface extends BaseEntityRepositoryInterface
      * @return Category
      */
     public function findOrFail(string $id): object;
+
+    /**
+     * @param GetCategoriesQuery $query
+     * @return PaginatedQueryResult
+     */
+    public function findAllCategories(GetCategoriesQuery $query): PaginatedQueryResult;
 }

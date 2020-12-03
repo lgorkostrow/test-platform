@@ -13,7 +13,7 @@ class UserFixtures extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
-        $this->createUsers($manager, 10);
+        $this->createUsers($manager, 100);
         $this->createAdmins($manager, 5);
         $this->createManagers($manager, 5);
         $this->createUsers($manager, 5, false);
@@ -26,7 +26,7 @@ class UserFixtures extends AbstractFixture
         for ($i = 0; $i < $count; $i++) {
             $user = User::createUser(
                 Uuid::uuid4()->toString(),
-                new PersonalData($this->faker->firstName, $this->faker->lastName, $this->faker->safeEmail),
+                new PersonalData($this->faker->firstName, $this->faker->lastName, $this->faker->unique()->safeEmail),
                 md5(uniqid()),
             );
 
@@ -43,7 +43,7 @@ class UserFixtures extends AbstractFixture
         for ($i = 0; $i < $count; $i++) {
             $user = User::createAdmin(
                 Uuid::uuid4()->toString(),
-                new PersonalData($this->faker->firstName, $this->faker->lastName, $this->faker->safeEmail),
+                new PersonalData($this->faker->firstName, $this->faker->lastName, $this->faker->unique()->safeEmail),
                 md5(uniqid()),
             );
 
@@ -58,7 +58,7 @@ class UserFixtures extends AbstractFixture
         for ($i = 0; $i < $count; $i++) {
             $user = User::createManager(
                 Uuid::uuid4()->toString(),
-                new PersonalData($this->faker->firstName, $this->faker->lastName, $this->faker->safeEmail),
+                new PersonalData($this->faker->firstName, $this->faker->lastName, $this->faker->unique()->safeEmail),
                 md5(uniqid()),
             );
 
