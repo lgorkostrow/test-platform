@@ -15,9 +15,13 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Messenger\MessageBusInterface;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 /**
  * @Rest\Route(path="/sign-up")
+ *
+ * @OA\Tag(name="Sign-Up")
  */
 class SignUpController extends AbstractFOSRestController
 {
@@ -33,6 +37,23 @@ class SignUpController extends AbstractFOSRestController
 
     /**
      * @Rest\Post(path="")
+     *
+     * @OA\RequestBody(
+     *     required=true,
+     *     @OA\JsonContent(
+     *        type="object",
+     *        ref=@Model(type=SignUpRequest::class),
+     *     )
+     * )
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="",
+     *     @OA\JsonContent(
+     *        type="object",
+     *        @OA\Property(property="id", type="string")
+     *     )
+     * )
      *
      * @Rest\View
      *
@@ -56,6 +77,16 @@ class SignUpController extends AbstractFOSRestController
 
     /**
      * @Rest\Post(path="/verify/email/{confirmationToken}")
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="",
+     *     @OA\JsonContent(
+     *        type="object",
+     *        @OA\Property(property="token", type="string"),
+     *        @OA\Property(property="refresh_token", type="string"),
+     *     )
+     * )
      *
      * @Rest\View
      *

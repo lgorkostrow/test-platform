@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e42df80b038ee7830e12ec4a997982d",
+    "content-hash": "5f3a162b867e8008ad7d10ddc465161e",
     "packages": [
         {
             "name": "brick/math",
@@ -2585,6 +2585,58 @@
             "description": "Symfony AMQP extension Messenger Bridge",
             "homepage": "https://symfony.com",
             "time": "2020-10-27T10:11:13+00:00"
+        },
+        {
+            "name": "symfony/asset",
+            "version": "v5.1.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/asset.git",
+                "reference": "19c59713f750642206b21a1edec5c18dea80f979"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/asset/zipball/19c59713f750642206b21a1edec5c18dea80f979",
+                "reference": "19c59713f750642206b21a1edec5c18dea80f979",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5"
+            },
+            "require-dev": {
+                "symfony/http-client": "^4.4|^5.0",
+                "symfony/http-foundation": "^4.4|^5.0",
+                "symfony/http-kernel": "^4.4|^5.0"
+            },
+            "suggest": {
+                "symfony/http-foundation": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Asset\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Asset Component",
+            "homepage": "https://symfony.com",
+            "time": "2020-10-24T12:01:57+00:00"
         },
         {
             "name": "symfony/cache",
@@ -5854,6 +5906,65 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "time": "2020-10-24T12:03:25+00:00"
+        },
+        {
+            "name": "twig/extra-bundle",
+            "version": "v3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/twigphp/twig-extra-bundle.git",
+                "reference": "a7c5799cf742ab0827f5d32df37528ee8bf5a233"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/twigphp/twig-extra-bundle/zipball/a7c5799cf742ab0827f5d32df37528ee8bf5a233",
+                "reference": "a7c5799cf742ab0827f5d32df37528ee8bf5a233",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1.3|^8.0",
+                "symfony/framework-bundle": "^4.3|^5.0",
+                "symfony/twig-bundle": "^4.3|^5.0",
+                "twig/twig": "^2.4|^3.0"
+            },
+            "require-dev": {
+                "twig/cssinliner-extra": "^2.12|^3.0",
+                "twig/html-extra": "^2.12|^3.0",
+                "twig/inky-extra": "^2.12|^3.0",
+                "twig/intl-extra": "^2.12|^3.0",
+                "twig/markdown-extra": "^2.12|^3.0"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Twig\\Extra\\TwigExtraBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                }
+            ],
+            "description": "A Symfony bundle for extra Twig extensions",
+            "homepage": "https://twig.symfony.com",
+            "keywords": [
+                "bundle",
+                "extra",
+                "twig"
+            ],
+            "time": "2020-05-21T09:56:39+00:00"
         },
         {
             "name": "twig/twig",

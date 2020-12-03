@@ -13,7 +13,7 @@ class UserFixtures extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
-        $this->createUsers($manager, 100);
+        $this->createUsers($manager, 20);
         $this->createAdmins($manager, 5);
         $this->createManagers($manager, 5);
         $this->createUsers($manager, 5, false);

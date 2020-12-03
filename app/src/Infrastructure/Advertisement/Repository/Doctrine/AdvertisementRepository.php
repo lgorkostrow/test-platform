@@ -69,7 +69,7 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
         if (null !== $title = $query->getTitle()) {
             $qb
                 ->andWhere($qb->expr()->like('a.description.title', ':title'))
-                ->setParameter('title', "%$title%")
+                ->setParameter('title', "$title%")
             ;
         }
 

@@ -26,6 +26,13 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
+ * @ORM\Table(
+ *     name="advertisement",
+ *     indexes={
+ *         @ORM\Index(name="in_category_idx", columns={"category_id", "state"}),
+ *         @ORM\Index(name="in_category_search_idx", columns={"category_id", "state", "title"}),
+ *     }
+ * )
  */
 class Advertisement implements TimestampableInterface, RaiseEventsInterface
 {

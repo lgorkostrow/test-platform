@@ -8,6 +8,8 @@ use App\Application\Validator\Constraints\EntityExists;
 use App\Domain\Common\Enum\CurrencyEnum;
 use App\Domain\Advertisement\Entity\Category;
 use Symfony\Component\Validator\Constraints as Assert;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 class CreateAdvertisementRequest
 {
@@ -59,6 +61,8 @@ class CreateAdvertisementRequest
 
     /**
      * @var AttachmentDto[]|array
+     *
+     * @OA\Property(type="array", @OA\Items(ref=@Model(type=AttachmentDto::class)))
      *
      * @Assert\Type(type="array")
      * @Assert\Count(min=1, max=10)

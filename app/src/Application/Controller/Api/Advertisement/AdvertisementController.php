@@ -34,9 +34,14 @@ use App\Domain\Advertisement\Enum\AdvertisementStateEnum;
 use App\Application\Validator\Constraints\EntityExists;
 use App\Domain\Advertisement\Entity\Category;
 use App\Domain\User\Enum\RoleEnum;
+use OpenApi\Annotations as OA;
+use App\Domain\Advertisement\Dto\AdvertisementListItemDto;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 /**
  * @Rest\Route(path="/advertisement")
+ *
+ * @OA\Tag(name="Advertisement")
  */
 class AdvertisementController extends AbstractFOSRestController
 {
@@ -82,6 +87,15 @@ class AdvertisementController extends AbstractFOSRestController
      * @Rest\QueryParam(name="category", strict=true, allowBlank=false, nullable=false, requirements=@EntityExists(class=Category::class))
      * @Rest\QueryParam(name="title", strict=true, allowBlank=false, nullable=true)
      *
+     * @OA\Response(
+     *     response=200,
+     *     description="",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=AdvertisementListItemDto::class))
+     *     )
+     * )
+     *
      * @Rest\View
      *
      * @param ParamFetcherInterface $paramFetcher
@@ -113,6 +127,15 @@ class AdvertisementController extends AbstractFOSRestController
      *     strict=true,
      * )
      *
+     * @OA\Response(
+     *     response=200,
+     *     description="",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=AdvertisementListItemDto::class))
+     *     )
+     * )
+     *
      * @Rest\View
      *
      * @param ParamFetcherInterface $paramFetcher
@@ -140,6 +163,15 @@ class AdvertisementController extends AbstractFOSRestController
      * @Rest\QueryParam(name="offset", requirements="\d+", strict=true, default=0)
      * @Rest\QueryParam(name="category", strict=true, allowBlank=false, nullable=true, requirements=@EntityExists(class=Category::class))
      *
+     * @OA\Response(
+     *     response=200,
+     *     description="",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=AdvertisementListItemDto::class))
+     *     )
+     * )
+     *
      * @Rest\View
      *
      * @param ParamFetcherInterface $paramFetcher
@@ -158,6 +190,12 @@ class AdvertisementController extends AbstractFOSRestController
 
     /**
      * @Rest\Get(path="/{id}")
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="",
+     *     @Model(type=AdvertisementDetailedViewDto::class)
+     * )
      *
      * @Rest\View
      *
@@ -179,6 +217,23 @@ class AdvertisementController extends AbstractFOSRestController
 
     /**
      * @Rest\Post(path="")
+     *
+     * @OA\RequestBody(
+     *     required=true,
+     *     @OA\JsonContent(
+     *        type="object",
+     *        ref=@Model(type=CreateAdvertisementRequest::class),
+     *     )
+     * )
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="",
+     *     @OA\JsonContent(
+     *        type="object",
+     *        @OA\Property(property="id", type="string")
+     *     )
+     * )
      *
      * @Rest\View
      *
