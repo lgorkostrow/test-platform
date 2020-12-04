@@ -6,8 +6,10 @@ namespace App\Application\Validator\Constraints;
 
 use App\Application\Mapper\DtoToEntityMapper;
 use App\Application\Utils\ArrayUtils;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntityValidator;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -32,7 +34,8 @@ class UniqueDtoValidator extends UniqueEntityValidator
             throw new UnexpectedTypeException($constraint, UniqueDto::class);
         }
 
-        $entity = $this->getEntity($dtoObject, $constraint);
+        $em = $this->registry->getManager($constraint->em);
+        $entity = $this->getEntity($em, $dtoObject, $constraint);
 
         if (ArrayUtils::isAssocArray($constraint->fields)) {
             $constraint->errorPath = ArrayUtils::getFirstStringKeyInAssocArray($constraint->fields);
@@ -40,14 +43,16 @@ class UniqueDtoValidator extends UniqueEntityValidator
         }
 
         parent::validate($entity, $constraint);
+
+        if ($em->contains($entity)) {
+            $em->refresh($entity);
+        }
     }
 
-    private function getEntity($dtoObject, UniqueDto $constraint)
+    private function getEntity(ObjectManager $em, $dtoObject, UniqueDto $constraint)
     {
         $mapper = new DtoToEntityMapper($dtoObject);
         $entityClass = $constraint->mapToEntityClass;
-
-        $em = $this->registry->getManager($constraint->em);
 
         // TODO: add the ability to work with composite ids
         $identifierFieldName = $em->getClassMetadata($constraint->mapToEntityClass)->getSingleIdentifierFieldName();

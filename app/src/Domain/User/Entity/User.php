@@ -8,7 +8,9 @@ use App\Domain\Common\Entity\Timestampable;
 use App\Domain\Common\Entity\TimestampableInterface;
 use App\Domain\Common\Event\RaiseEventsInterface;
 use App\Domain\Common\Event\RaiseEventsTrait;
+use App\Domain\Common\Exception\BusinessException;
 use App\Domain\User\Enum\RoleEnum;
+use App\Domain\User\Event\EmailChangedEvent;
 use App\Domain\User\Event\UserCreatedEvent;
 use App\Domain\User\UserInterface;
 use App\Domain\User\ValueObject\PersonalData;
@@ -36,6 +38,13 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
      * @ORM\Embedded(class=PersonalData::class, columnPrefix=false)
      */
     private PersonalData $personalData;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=255, unique=true, nullable=true)
+     */
+    private ?string $newEmail;
 
     /**
      * @var string|null
@@ -208,5 +217,46 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
     public function isManagerOrAdmin(): bool
     {
         return $this->isManager() || $this->isAdmin();
+    }
+
+    public function updatePersonalData(PersonalData $personalData): void
+    {
+        if ($this->personalData->getEmail() !== $personalData->getEmail()) {
+            throw new BusinessException('EMAIL CAN\'T BE CHANGED');
+        }
+
+        $this->personalData = $personalData;
+    }
+
+    /**
+     * @param string $newEmail
+     * @param string $token
+     */
+    public function updateEmail(string $newEmail, string $token): void
+    {
+        if ($this->personalData->getEmail() === $newEmail) {
+            return;
+        }
+
+        $this->confirmationToken = $token;
+        $this->newEmail = $newEmail;
+
+        $this->raise(new EmailChangedEvent($this->id, $newEmail));
+    }
+
+    public function confirmNewEmail(): void
+    {
+        if (!$this->newEmail) {
+            throw new BusinessException('EMPTY_NEW_EMAIL');
+        }
+
+        $this->personalData = new PersonalData(
+            $this->personalData->getFirstName(),
+            $this->personalData->getLastName(),
+            $this->newEmail,
+            $this->personalData->getBiography(),
+        );
+        $this->newEmail = null;
+        $this->confirmationToken = null;
     }
 }

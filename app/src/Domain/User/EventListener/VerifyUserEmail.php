@@ -10,7 +10,7 @@ use App\Domain\Common\Service\SenderInterface;
 use App\Domain\User\Event\UserCreatedEvent;
 use App\Domain\User\Repository\UserRepositoryInterface;
 
-class SendConfirmationEmailToUser implements DomainEventHandlerInterface
+class VerifyUserEmail implements DomainEventHandlerInterface
 {
     /**
      * @var UserRepositoryInterface
@@ -36,13 +36,13 @@ class SendConfirmationEmailToUser implements DomainEventHandlerInterface
 
     public function __invoke(UserCreatedEvent $event)
     {
-        $user = $this->repository->find($event->getUserId());
+        $user = $this->repository->findOrFail($event->getUserId());
         if ($user->isEmailConfirmed()) {
             return;
         }
 
         $body = $this->emailSender->generateBody(
-            'mails/user_verification.html.twig',
+            'mails/user/user_verification.html.twig',
             ['url' => $this->urlsGenerator->generateUserVerificationUrl($user->getConfirmationToken())],
         );
 

@@ -8,6 +8,7 @@ parameters:
     file_dir: '%kernel.project_dir%/public/files/'
     frontend_urls:
         user_verification: '%env(USER_VERIFICATION_URL)%'
+        new_user_email_verification: '%env(NEW_USER_EMAIL_VERIFICATION_URL)%'
 services:
     # default configuration for services in *this* file
     _defaults:

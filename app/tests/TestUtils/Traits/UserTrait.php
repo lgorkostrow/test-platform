@@ -96,4 +96,17 @@ trait UserTrait
 
         return $property->getValue($user);
     }
+
+    private function getUserField(User $user, string $field)
+    {
+        $reflectionClass = new \ReflectionClass(User::class);
+        if ($reflectionClass->hasProperty($field)) {
+            $property = $reflectionClass->getProperty($field);
+            $property->setAccessible(true);
+
+            return $property->getValue($user);
+        }
+
+        throw new \InvalidArgumentException('Undefined field ' . $field);
+    }
 }

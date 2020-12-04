@@ -1,0 +1,60 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Application\Http\Request\User;
+
+use App\Application\Validator\Constraints as AppAssert;
+use App\Domain\User\Entity\User;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @AppAssert\UniqueDto(
+ *     fields={"email": "personalData.email"},
+ *     mapToEntityClass=User::class,
+ *     errorPath="email"
+ * )
+ */
+class UpdatePersonalDataRequest
+{
+    /**
+     * @var string
+     */
+    public $id;
+
+    /**
+     * @var string
+     *
+     * @Assert\Type("string")
+     * @Assert\Email
+     * @Assert\NotBlank
+     * @Assert\Length(max="255")
+     */
+    public $email;
+
+    /**
+     * @var string
+     *
+     * @Assert\Type("string")
+     * @Assert\NotBlank
+     * @Assert\Length(max="255")
+     */
+    public $firstName;
+
+    /**
+     * @var string
+     *
+     * @Assert\Type("string")
+     * @Assert\NotBlank
+     * @Assert\Length(max="255")
+     */
+    public $lastName;
+
+    /**
+     * @var string|null
+     *
+     * @Assert\Type("string")
+     * @Assert\Length(max="255")
+     */
+    public $biography;
+}

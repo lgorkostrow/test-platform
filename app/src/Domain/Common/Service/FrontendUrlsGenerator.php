@@ -20,4 +20,9 @@ class FrontendUrlsGenerator
     {
         return strtr($this->frontendUrls['user_verification'], ['{token}' => $token]);
     }
+
+    public function generateNewUserEmailVerificationUrl(string $token): string
+    {
+        return strtr($this->frontendUrls['new_user_email_verification'], ['{token}' => $token]);
+    }
 }

@@ -2,49 +2,52 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\User\ValueObject;
+namespace App\Domain\User\UseCase;
 
-use Doctrine\ORM\Mapping as ORM;
+use App\Domain\Common\Message\AsyncMessageInterface;
 
-/**
- * @ORM\Embeddable
- */
-class PersonalData
+class UpdatePersonalDataCommand implements AsyncMessageInterface
 {
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", length=255)
+     */
+    private string $userId;
+
+    /**
+     * @var string
      */
     private string $firstName;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", length=255)
      */
     private string $lastName;
 
     /**
      * @var string
-     *
-     * @ORM\Column(type="string", length=255, unique=true)
      */
     private string $email;
 
     /**
      * @var string|null
-     *
-     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private ?string $biography;
 
-    public function __construct(string $firstName, string $lastName, string $email, ?string $biography = null)
+    public function __construct(string $userId, string $firstName, string $lastName, string $email, ?string $biography)
     {
+        $this->userId = $userId;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
         $this->email = $email;
         $this->biography = $biography;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserId(): string
+    {
+        return $this->userId;
     }
 
     /**
@@ -69,17 +72,6 @@ class PersonalData
     public function getEmail(): string
     {
         return $this->email;
-    }
-
-    /**
-     * @param string $email
-     * @return PersonalData
-     */
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
     }
 
     /**

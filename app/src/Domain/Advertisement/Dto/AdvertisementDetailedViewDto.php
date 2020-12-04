@@ -41,7 +41,7 @@ class AdvertisementDetailedViewDto
     private DateTimeInterface $createdAt;
 
     /**
-     * @var array|AdvertisementAttachmentSimpleDto[]
+     * @var AdvertisementAttachmentSimpleDto[]
      */
     private array $attachments;
 
@@ -125,7 +125,7 @@ class AdvertisementDetailedViewDto
     }
 
     /**
-     * @return AdvertisementAttachmentSimpleDto[]|array
+     * @return AdvertisementAttachmentSimpleDto[]
      */
     public function getAttachments(): array
     {
