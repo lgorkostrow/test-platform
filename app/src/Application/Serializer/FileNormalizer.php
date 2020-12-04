@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application\Serializer;
 
+use App\Domain\Advertisement\Dto\AdvertisementAttachmentSimpleDto;
 use App\Domain\Advertisement\Dto\AdvertisementListItemDto;
 use App\Domain\File\Utils\FileUtils;
 use Symfony\Component\Serializer\Normalizer\ContextAwareNormalizerInterface;
@@ -13,6 +14,7 @@ class FileNormalizer implements ContextAwareNormalizerInterface
 {
     private const MAP = [
         AdvertisementListItemDto::class => 'featuredImage',
+        AdvertisementAttachmentSimpleDto::class => 'path',
     ];
 
     /**

@@ -6,6 +6,7 @@ namespace App\Domain\Advertisement\Entity;
 
 use App\Domain\File\Entity\File;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 
 /**
  * @ORM\Entity
@@ -13,9 +14,16 @@ use Doctrine\ORM\Mapping as ORM;
 class AdvertisementAttachment
 {
     /**
-     * @var Advertisement
+     * @var string
      *
      * @ORM\Id
+     * @ORM\Column(type="guid", unique=true)
+     */
+    private string $id;
+
+    /**
+     * @var Advertisement
+     *
      * @ORM\ManyToOne(targetEntity=Advertisement::class, inversedBy="attachments")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
@@ -24,7 +32,6 @@ class AdvertisementAttachment
     /**
      * @var File
      *
-     * @ORM\Id
      * @ORM\ManyToOne(targetEntity=File::class, cascade={"persist", "remove"})
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
@@ -39,6 +46,7 @@ class AdvertisementAttachment
 
     private function __construct(Advertisement $advertisement, File $file, bool $featured = false)
     {
+        $this->id = Uuid::uuid4()->toString();
         $this->advertisement = $advertisement;
         $this->file = $file;
         $this->featured = $featured;
@@ -52,6 +60,14 @@ class AdvertisementAttachment
     public static function createFeatured(Advertisement $attachment, File $file): self
     {
         return new self($attachment, $file, true);
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     /**

@@ -53,6 +53,11 @@ class AdvertisementDetailedView
      */
     private DateTimeInterface $createdAt;
 
+    /**
+     * @var array|AttachmentView[]
+     */
+    private array $attachments;
+
     public function __construct(
         string $id,
         string $title,
@@ -145,5 +150,24 @@ class AdvertisementDetailedView
     public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return AttachmentView[]|array
+     */
+    public function getAttachments(): array
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * @param AttachmentView[]|array $attachments
+     * @return AdvertisementDetailedView
+     */
+    public function setAttachments(array $attachments): self
+    {
+        $this->attachments = $attachments;
+
+        return $this;
     }
 }

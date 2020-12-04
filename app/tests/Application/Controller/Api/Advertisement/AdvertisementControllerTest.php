@@ -284,6 +284,7 @@ class AdvertisementControllerTest extends AbstractRestTestCase
         $this->assertArrayHasKey('price', $responseData);
         $this->assertArrayHasKey('author', $responseData);
         $this->assertArrayHasKey('createdAt', $responseData);
+        $this->assertArrayHasKey('attachments', $responseData);
     }
 
     /** @test */

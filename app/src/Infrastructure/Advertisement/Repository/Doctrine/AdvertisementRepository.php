@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Advertisement\Repository\Doctrine;
 
 use App\Domain\Advertisement\Entity\Advertisement;
+use App\Domain\Advertisement\Entity\AdvertisementAttachment;
 use App\Domain\Advertisement\Query\GetPublishedAdvertisementsQuery;
 use App\Domain\Advertisement\Query\GetReadyForReviewAdvertisementsQuery;
 use App\Domain\Advertisement\Query\GetUserAdvertisementsQuery;
@@ -10,6 +11,7 @@ use App\Domain\Advertisement\Repository\AdvertisementRepositoryInterface;
 use App\Domain\Advertisement\State\Advertisement\OnReviewState;
 use App\Domain\Advertisement\State\Advertisement\PublishedState;
 use App\Domain\Advertisement\View\AdvertisementDetailedView;
+use App\Domain\Advertisement\View\AttachmentView;
 use App\Domain\Common\Repository\PaginatedQueryResult;
 use App\Infrastructure\Common\Repository\AbstractDoctrineRepository;
 use Doctrine\ORM\Query\Expr\Join;
@@ -96,7 +98,7 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
 
     public function findDetailedView(string $id): ?AdvertisementDetailedView
     {
-        return $this->_em->createQueryBuilder()
+        $advertisement = $this->_em->createQueryBuilder()
             ->select(
                 sprintf(
                     'NEW %s(a.id, a.description.title, a.description.description, a.price.value, a.price.currency, author.id, CONCAT(author.personalData.firstName, \'\', author.personalData.lastName), author.personalData.email, a.createdAt)',
@@ -110,6 +112,27 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
             ->getQuery()
             ->getOneOrNullResult()
         ;
+
+        if (!$advertisement) {
+            return null;
+        }
+
+        $attachments = $this->_em->createQueryBuilder()
+            ->select(
+                sprintf(
+                    'NEW %s(a.id, a.featured, file.path)',
+                    AttachmentView::class,
+                )
+            )
+            ->from(AdvertisementAttachment::class, 'a')
+            ->leftJoin('a.file', 'file')
+            ->where('a.advertisement = :advertisementId')
+            ->setParameter('advertisementId', $id)
+            ->getQuery()
+            ->getResult()
+        ;
+
+        return $advertisement->setAttachments($attachments);
     }
 
     private function buildListQueryBuilder(): QueryBuilder

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domain\Advertisement\Dto;
 
 use App\Domain\Advertisement\View\AdvertisementDetailedView;
+use App\Domain\Advertisement\View\AttachmentView;
 use DateTimeInterface;
 
 class AdvertisementDetailedViewDto
@@ -39,13 +40,19 @@ class AdvertisementDetailedViewDto
      */
     private DateTimeInterface $createdAt;
 
+    /**
+     * @var array|AdvertisementAttachmentSimpleDto[]
+     */
+    private array $attachments;
+
     public function __construct(
         string $id,
         string $title,
         string $description,
         PriceDto $price,
         AuthorDto $author,
-        DateTimeInterface $createdAt
+        DateTimeInterface $createdAt,
+        array $attachments
     ) {
         $this->id = $id;
         $this->title = $title;
@@ -53,6 +60,7 @@ class AdvertisementDetailedViewDto
         $this->price = $price;
         $this->author = $author;
         $this->createdAt = $createdAt;
+        $this->attachments = $attachments;
     }
 
     public static function createFromAdvertisementDetailedView(AdvertisementDetailedView $view): self
@@ -64,6 +72,7 @@ class AdvertisementDetailedViewDto
             new PriceDto($view->getPrice(), $view->getCurrency()),
             new AuthorDto($view->getAuthorId(), $view->getAuthorFullName(), $view->getAuthorEmail()),
             $view->getCreatedAt(),
+            array_map(fn(AttachmentView $view) => AdvertisementAttachmentSimpleDto::createFromView($view), $view->getAttachments()),
         );
     }
 
@@ -113,5 +122,13 @@ class AdvertisementDetailedViewDto
     public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @return AdvertisementAttachmentSimpleDto[]|array
+     */
+    public function getAttachments(): array
+    {
+        return $this->attachments;
     }
 }
