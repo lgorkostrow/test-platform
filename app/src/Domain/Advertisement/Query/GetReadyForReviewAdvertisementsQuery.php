@@ -8,9 +8,6 @@ use App\Domain\Common\Message\AbstractListQuery;
 
 class GetReadyForReviewAdvertisementsQuery extends AbstractListQuery
 {
-    /**
-     * @var string|null
-     */
     private ?string $categoryId;
 
     public function __construct(int $limit, int $offset, ?string $categoryId)
@@ -20,9 +17,6 @@ class GetReadyForReviewAdvertisementsQuery extends AbstractListQuery
         $this->categoryId = $categoryId;
     }
 
-    /**
-     * @return string|null
-     */
     public function getCategoryId(): ?string
     {
         return $this->categoryId;

@@ -8,5 +8,5 @@ use App\Domain\Common\State\AbstractState;
 
 class ArchivedState extends AbstractState
 {
-    const NAME = 'archived';
+    public const NAME = 'archived';
 }

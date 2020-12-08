@@ -23,7 +23,7 @@ trait RaiseEventsTrait
         return $events;
     }
 
-    protected function raise(DomainEventInterface $event)
+    protected function raise(DomainEventInterface $event): void
     {
         $this->events[] = $event;
     }

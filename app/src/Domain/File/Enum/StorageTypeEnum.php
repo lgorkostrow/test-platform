@@ -6,5 +6,5 @@ namespace App\Domain\File\Enum;
 
 class StorageTypeEnum
 {
-    const LOCAL = 'local';
+    public const LOCAL = 'local';
 }

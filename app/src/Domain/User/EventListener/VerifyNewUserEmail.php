@@ -12,19 +12,10 @@ use App\Domain\User\Repository\UserRepositoryInterface;
 
 class VerifyNewUserEmail implements DomainEventHandlerInterface
 {
-    /**
-     * @var UserRepositoryInterface
-     */
     private UserRepositoryInterface $repository;
 
-    /**
-     * @var SenderInterface
-     */
     private SenderInterface $emailSender;
 
-    /**
-     * @var FrontendUrlsGenerator
-     */
     private FrontendUrlsGenerator $urlsGenerator;
 
     public function __construct(UserRepositoryInterface $repository, SenderInterface $emailSender, FrontendUrlsGenerator $urlsGenerator)
@@ -34,7 +25,7 @@ class VerifyNewUserEmail implements DomainEventHandlerInterface
         $this->urlsGenerator = $urlsGenerator;
     }
 
-    public function __invoke(EmailChangedEvent $event)
+    public function __invoke(EmailChangedEvent $event): void
     {
         $user = $this->repository->findOrFail($event->getUserId());
 

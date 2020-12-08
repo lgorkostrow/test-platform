@@ -62,33 +62,21 @@ class AdvertisementAttachment
         return new self($attachment, $file, true);
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return Advertisement
-     */
     public function getAdvertisement(): Advertisement
     {
         return $this->advertisement;
     }
 
-    /**
-     * @return File
-     */
     public function getFile(): File
     {
         return $this->file;
     }
 
-    /**
-     * @return bool
-     */
     public function isFeatured(): bool
     {
         return $this->featured;

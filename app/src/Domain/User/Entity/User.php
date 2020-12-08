@@ -85,7 +85,7 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
         $this->raise(new UserCreatedEvent($id));
     }
 
-    public static function createUser(string $id, PersonalData $personalData, string $confirmationToken)
+    public static function createUser(string $id, PersonalData $personalData, string $confirmationToken): User
     {
         return new self(
             $id,
@@ -95,7 +95,7 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
         );
     }
 
-    public static function createManager(string $id, PersonalData $personalData, string $confirmationToken)
+    public static function createManager(string $id, PersonalData $personalData, string $confirmationToken): User
     {
         return new self(
             $id,
@@ -105,7 +105,7 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
         );
     }
 
-    public static function createAdmin(string $id, PersonalData $personalData, string $confirmationToken)
+    public static function createAdmin(string $id, PersonalData $personalData, string $confirmationToken): User
     {
         return new self(
             $id,
@@ -115,26 +115,16 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
         );
     }
 
-    /**
-     * @return array
-     */
     public function getRoles(): array
     {
         return $this->roles;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
-    /**
-     * @param string|null $password
-     * @return User
-     */
     public function setPassword(?string $password): self
     {
         $this->password = $password;
@@ -147,9 +137,6 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
         return null;
     }
 
-    /**
-     * @return string
-     */
     public function getUsername(): string
     {
         return $this->personalData->getEmail();
@@ -157,25 +144,16 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
 
     public function eraseCredentials() {}
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->personalData->getEmail();
     }
 
-    /**
-     * @return string|null
-     */
     public function getConfirmationToken(): ?string
     {
         return $this->confirmationToken;
@@ -187,33 +165,21 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
         $this->confirmationToken = null;
     }
 
-    /**
-     * @return bool
-     */
     public function isEmailConfirmed(): bool
     {
         return $this->emailConfirmed;
     }
 
-    /**
-     * @return bool
-     */
     public function isManager(): bool
     {
-        return in_array(RoleEnum::ROLE_MANAGER, $this->roles);
+        return in_array(RoleEnum::ROLE_MANAGER, $this->roles, true);
     }
 
-    /**
-     * @return bool
-     */
     public function isAdmin(): bool
     {
-        return in_array(RoleEnum::ROLE_ADMIN, $this->roles);
+        return in_array(RoleEnum::ROLE_ADMIN, $this->roles, true);
     }
 
-    /**
-     * @return bool
-     */
     public function isManagerOrAdmin(): bool
     {
         return $this->isManager() || $this->isAdmin();
@@ -228,10 +194,6 @@ class User implements UserInterface, TimestampableInterface, RaiseEventsInterfac
         $this->personalData = $personalData;
     }
 
-    /**
-     * @param string $newEmail
-     * @param string $token
-     */
     public function updateEmail(string $newEmail, string $token): void
     {
         if ($this->personalData->getEmail() === $newEmail) {

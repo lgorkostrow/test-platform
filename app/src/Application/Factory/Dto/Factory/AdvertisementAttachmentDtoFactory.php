@@ -9,9 +9,6 @@ use App\Domain\Advertisement\Dto\AdvertisementAttachmentDto;
 
 class AdvertisementAttachmentDtoFactory
 {
-    /**
-     * @var string
-     */
     private string $storageType;
 
     public function __construct(string $storageType)

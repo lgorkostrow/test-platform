@@ -12,9 +12,6 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class EntityExistsValidator extends ConstraintValidator
 {
-    /**
-     * @var EntityManagerInterface
-     */
     private EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)

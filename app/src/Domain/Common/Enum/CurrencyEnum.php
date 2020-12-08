@@ -6,11 +6,11 @@ namespace App\Domain\Common\Enum;
 
 class CurrencyEnum
 {
-    const UAH = 'UAH';
-    const USD = 'USD';
-    const EUR = 'EUR';
+    public const UAH = 'UAH';
+    public const USD = 'USD';
+    public const EUR = 'EUR';
 
-    const VALID_CHOICES = [
+    public const VALID_CHOICES = [
         self::UAH,
         self::USD,
         self::EUR,

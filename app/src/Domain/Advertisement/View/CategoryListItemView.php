@@ -6,14 +6,8 @@ namespace App\Domain\Advertisement\View;
 
 class CategoryListItemView
 {
-    /**
-     * @var string
-     */
     private string $id;
 
-    /**
-     * @var string
-     */
     private string $name;
 
     public function __construct(string $id, string $name)
@@ -22,17 +16,11 @@ class CategoryListItemView
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;

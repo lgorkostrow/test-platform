@@ -8,7 +8,7 @@ use App\Domain\Common\State\AbstractState;
 
 class OnReviewState extends AbstractState
 {
-    const NAME = 'on_review';
+    public const NAME = 'on_review';
 
     /**
      * @var array|string[]

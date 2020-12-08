@@ -6,11 +6,8 @@ namespace App\Domain\Common\State;
 
 abstract class AbstractState
 {
-    const NAME = '';
+    public const NAME = '';
 
-    /**
-     * @var array
-     */
     protected array $next = [];
 
     public function canBeChangedTo(AbstractState $state): bool

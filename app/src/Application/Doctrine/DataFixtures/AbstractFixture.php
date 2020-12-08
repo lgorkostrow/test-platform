@@ -13,14 +13,8 @@ use Faker\Generator;
 
 abstract class AbstractFixture extends Fixture
 {
-    /**
-     * @var Generator
-     */
     protected Generator $faker;
 
-    /**
-     * @var EntityManagerInterface
-     */
     protected EntityManagerInterface $entityManager;
 
     public function __construct(EntityManagerInterface $entityManager)

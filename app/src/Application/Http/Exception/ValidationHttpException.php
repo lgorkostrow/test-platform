@@ -9,9 +9,6 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class ValidationHttpException extends UnprocessableEntityHttpException
 {
-    /**
-     * @var ConstraintViolationListInterface
-     */
     private ConstraintViolationListInterface $errors;
 
     public function __construct(ConstraintViolationListInterface $errors)
@@ -21,9 +18,6 @@ class ValidationHttpException extends UnprocessableEntityHttpException
         $this->errors = $errors;
     }
 
-    /**
-     * @return ConstraintViolationListInterface
-     */
     public function getErrors(): ConstraintViolationListInterface
     {
         return $this->errors;

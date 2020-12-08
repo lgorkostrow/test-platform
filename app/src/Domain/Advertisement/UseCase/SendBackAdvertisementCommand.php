@@ -8,14 +8,8 @@ use App\Domain\Common\Message\AsyncMessageInterface;
 
 class SendBackAdvertisementCommand implements AsyncMessageInterface
 {
-    /**
-     * @var string
-     */
     private string $advertisementId;
 
-    /**
-     * @var string
-     */
     private string $reason;
 
     public function __construct(string $advertisementId, string $reason)
@@ -24,17 +18,11 @@ class SendBackAdvertisementCommand implements AsyncMessageInterface
         $this->reason = $reason;
     }
 
-    /**
-     * @return string
-     */
     public function getAdvertisementId(): string
     {
         return $this->advertisementId;
     }
 
-    /**
-     * @return string
-     */
     public function getReason(): string
     {
         return $this->reason;

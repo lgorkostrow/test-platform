@@ -21,9 +21,6 @@ use Nelmio\ApiDocBundle\Annotation\Model;
  */
 class CategoryController extends AbstractFOSRestController
 {
-    /**
-     * @var MessageBusInterface
-     */
     private MessageBusInterface $queryBus;
 
     public function __construct(MessageBusInterface $queryBus)

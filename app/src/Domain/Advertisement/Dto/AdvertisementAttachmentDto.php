@@ -8,9 +8,6 @@ use App\Domain\File\Dto\FileDto;
 
 class AdvertisementAttachmentDto extends FileDto
 {
-    /**
-     * @var bool
-     */
     private bool $featured;
 
     public function __construct(
@@ -28,9 +25,6 @@ class AdvertisementAttachmentDto extends FileDto
         $this->featured = $featured;
     }
 
-    /**
-     * @return bool
-     */
     public function isFeatured(): bool
     {
         return $this->featured;

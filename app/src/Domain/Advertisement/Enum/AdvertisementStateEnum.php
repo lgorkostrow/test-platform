@@ -11,7 +11,7 @@ use App\Domain\Advertisement\State\Advertisement\PublishedState;
 
 class AdvertisementStateEnum
 {
-    const VALID_CHOICES = [
+    public const VALID_CHOICES = [
         DraftState::NAME,
         OnReviewState::NAME,
         PublishedState::NAME,

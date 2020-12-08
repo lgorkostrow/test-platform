@@ -11,14 +11,8 @@ use App\Domain\User\Repository\UserRepositoryInterface;
 
 class SignUpCommandHandler implements CommandHandlerInterface
 {
-    /**
-     * @var UserRepositoryInterface
-     */
     private UserRepositoryInterface $repository;
 
-    /**
-     * @var UserFactory
-     */
     private UserFactory $factory;
 
     public function __construct(UserRepositoryInterface $repository, UserFactory $factory)
@@ -27,7 +21,7 @@ class SignUpCommandHandler implements CommandHandlerInterface
         $this->factory = $factory;
     }
 
-    public function __invoke(SignUpCommand $command)
+    public function __invoke(SignUpCommand $command): void
     {
         if (null !== $user = $this->repository->findByEmail($command->getDto()->getEmail())) {
             throw new UserWithEmailAlreadyExistsException();

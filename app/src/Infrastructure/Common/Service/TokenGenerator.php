@@ -9,9 +9,6 @@ use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface as Ba
 
 class TokenGenerator implements TokenGeneratorInterface
 {
-    /**
-     * @var BaseTokenGeneratorInterface
-     */
     private BaseTokenGeneratorInterface $generator;
 
     public function __construct(BaseTokenGeneratorInterface $generator)

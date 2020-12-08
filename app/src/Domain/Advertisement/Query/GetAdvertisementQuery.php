@@ -8,9 +8,6 @@ use App\Domain\Common\Message\SyncMessageInterface;
 
 class GetAdvertisementQuery implements SyncMessageInterface
 {
-    /**
-     * @var string
-     */
     private string $id;
 
     public function __construct(string $id)
@@ -18,9 +15,6 @@ class GetAdvertisementQuery implements SyncMessageInterface
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;

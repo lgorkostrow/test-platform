@@ -8,9 +8,6 @@ use App\Domain\Common\Message\AsyncMessageInterface;
 
 class ArchiveAdvertisementCommand implements AsyncMessageInterface
 {
-    /**
-     * @var string
-     */
     private string $advertisementId;
 
     public function __construct(string $advertisementId)
@@ -18,9 +15,6 @@ class ArchiveAdvertisementCommand implements AsyncMessageInterface
         $this->advertisementId = $advertisementId;
     }
 
-    /**
-     * @return string
-     */
     public function getAdvertisementId(): string
     {
         return $this->advertisementId;

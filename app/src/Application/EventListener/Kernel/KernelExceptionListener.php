@@ -8,8 +8,10 @@ use App\Application\Exception\AppInformativeExceptionInterface;
 use App\Application\Http\Exception\ValidationHttpException;
 use App\Application\Http\Response\AppInformativeExceptionResponse;
 use App\Application\Utils\ValidatorUtils;
+use Exception;
 use FOS\RestBundle\Exception\InvalidParameterException;
 use FOS\RestBundle\FOSRestBundle;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -18,12 +20,10 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Throwable;
 
 class KernelExceptionListener
 {
-    /**
-     * @var NormalizerInterface
-     */
     private NormalizerInterface $normalizer;
 
     public function __construct(NormalizerInterface $normalizer)
@@ -31,7 +31,7 @@ class KernelExceptionListener
         $this->normalizer = $normalizer;
     }
 
-    public function onKernelException(ExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event): void
     {
         $request = $event->getRequest();
         if (!$request->attributes->get(FOSRestBundle::ZONE_ATTRIBUTE, true)) {
@@ -43,13 +43,13 @@ class KernelExceptionListener
         }
     }
 
-    protected function isApiRequest(Request $request)
+    protected function isApiRequest(Request $request): bool
     {
-        return 'application/json' === $request->headers->get('Content-Type')
-            || 0 === strpos($request->getPathInfo(), '/api/');
+        return $request->headers->get('Content-Type') === 'application/json'
+            || strpos($request->getPathInfo(), '/api/') === 0;
     }
 
-    protected function handleException(ExceptionEvent $event, \Throwable $exception)
+    protected function handleException(ExceptionEvent $event, Throwable $exception): void
     {
         if ($exception instanceof HttpException) {
             switch (true) {
@@ -73,7 +73,7 @@ class KernelExceptionListener
             }
 
             $event->setResponse(new JsonResponse(['errors' => $message], $exception->getStatusCode()));
-        } elseif ($exception instanceof \RuntimeException) {
+        } elseif ($exception instanceof RuntimeException) {
             $event->setResponse(new JsonResponse(
                 ['errors' => ['_system' => str_replace(' ', '_', mb_strtoupper($exception->getMessage()))]],
                 $exception->getCode() ?: 500,
@@ -89,8 +89,8 @@ class KernelExceptionListener
         foreach ($violations as $violation) {
             if ($constraint = $violation->getConstraint()) {
                 try {
-                    $message = $constraint->getErrorName($violation->getCode());
-                } catch (\Exception $e) {
+                    $message = $constraint::getErrorName($violation->getCode());
+                } catch (Exception $e) {
                     continue;
                 }
             } else {
@@ -98,7 +98,7 @@ class KernelExceptionListener
             }
 
             $propertyPath = $violation->getPropertyPath();
-            if ('[' === mb_substr($propertyPath, 0, 1) && ']' === mb_substr($propertyPath, -1, 1)) {
+            if (mb_strpos($propertyPath, '[') === 0 && mb_substr($propertyPath, -1, 1) === ']') {
                 $propertyPath = trim($propertyPath, '[]');
             }
 
@@ -110,7 +110,7 @@ class KernelExceptionListener
 
     private function formatParamFetcherErrors(InvalidParameterException $exception): ConstraintViolationList
     {
-        return new ConstraintViolationList(array_map(function (ConstraintViolation $item) use ($exception) {
+        return new ConstraintViolationList(array_map(static function (ConstraintViolation $item) use ($exception) {
             return ValidatorUtils::rebuildViolationWithPropertyPath($item, $exception->getParameter()->getName());
         }, (array)$exception->getViolations()->getIterator()));
     }

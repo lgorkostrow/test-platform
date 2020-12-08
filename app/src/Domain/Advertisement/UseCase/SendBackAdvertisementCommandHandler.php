@@ -9,9 +9,6 @@ use App\Domain\Common\Message\CommandHandlerInterface;
 
 class SendBackAdvertisementCommandHandler implements CommandHandlerInterface
 {
-    /**
-     * @var AdvertisementRepositoryInterface
-     */
     private AdvertisementRepositoryInterface $repository;
 
     public function __construct(AdvertisementRepositoryInterface $repository)
@@ -19,7 +16,7 @@ class SendBackAdvertisementCommandHandler implements CommandHandlerInterface
         $this->repository = $repository;
     }
 
-    public function __invoke(SendBackAdvertisementCommand $command)
+    public function __invoke(SendBackAdvertisementCommand $command): void
     {
         $advertisement = $this->repository->findOrFail($command->getAdvertisementId());
         $advertisement->sendBack($command->getReason());

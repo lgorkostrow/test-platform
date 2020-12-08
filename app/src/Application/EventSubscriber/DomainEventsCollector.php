@@ -23,9 +23,6 @@ class DomainEventsCollector implements EventSubscriber
      */
     private array $events = [];
 
-    /**
-     * @var MessageBusInterface
-     */
     private MessageBusInterface $eventBus;
 
     public function __construct(MessageBusInterface $eventBus)
@@ -43,22 +40,22 @@ class DomainEventsCollector implements EventSubscriber
         ];
     }
 
-    public function postPersist(LifecycleEventArgs $event)
+    public function postPersist(LifecycleEventArgs $event): void
     {
         $this->doCollect($event);
     }
 
-    public function postUpdate(LifecycleEventArgs $event)
+    public function postUpdate(LifecycleEventArgs $event): void
     {
         $this->doCollect($event);
     }
 
-    public function postRemove(LifecycleEventArgs $event)
+    public function postRemove(LifecycleEventArgs $event): void
     {
         $this->doCollect($event);
     }
 
-    public function postFlush(PostFlushEventArgs $args)
+    public function postFlush(): void
     {
         $this->dispatchCollectedEvents();
     }
@@ -77,7 +74,7 @@ class DomainEventsCollector implements EventSubscriber
         }
     }
 
-    private function doCollect(LifecycleEventArgs $event)
+    private function doCollect(LifecycleEventArgs $event): void
     {
         $entity = $event->getObject();
 

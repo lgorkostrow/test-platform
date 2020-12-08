@@ -12,24 +12,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class JwtTokenManager
 {
-    /**
-     * @var JWTTokenManagerInterface
-     */
     private JWTTokenManagerInterface $jwtManager;
 
-    /**
-     * @var AttachRefreshTokenOnSuccessListener
-     */
     private AttachRefreshTokenOnSuccessListener $refreshTokenOnSuccessListener;
 
-    /**
-     * @var RefreshTokenManagerInterface
-     */
     private RefreshTokenManagerInterface $refreshTokenManager;
 
-    /**
-     * @var JWTEncoderInterface
-     */
     private JWTEncoderInterface $encoder;
 
     public function __construct(

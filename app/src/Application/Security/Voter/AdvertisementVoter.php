@@ -22,7 +22,7 @@ class AdvertisementVoter extends Voter
                 PermissionEnum::ADVERTISEMENT_PUBLISH,
                 PermissionEnum::ADVERTISEMENT_SEND_BACK,
                 PermissionEnum::ADVERTISEMENT_ARCHIVE,
-            ])
+            ], true)
         ;
     }
 
@@ -45,11 +45,11 @@ class AdvertisementVoter extends Voter
                 || (!$subject->isPublished() && ($user->isManagerOrAdmin() || $subject->isAuthor($user)));
         }
 
-        if (in_array($attribute, [PermissionEnum::ADVERTISEMENT_EDIT, PermissionEnum::ADVERTISEMENT_SEND_TO_REVIEW])) {
+        if (in_array($attribute, [PermissionEnum::ADVERTISEMENT_EDIT, PermissionEnum::ADVERTISEMENT_SEND_TO_REVIEW], true)) {
             return $subject->isAuthor($user);
         }
 
-        if (in_array($attribute, [PermissionEnum::ADVERTISEMENT_PUBLISH, PermissionEnum::ADVERTISEMENT_SEND_BACK])) {
+        if (in_array($attribute, [PermissionEnum::ADVERTISEMENT_PUBLISH, PermissionEnum::ADVERTISEMENT_SEND_BACK], true)) {
             return $user->isManagerOrAdmin();
         }
 

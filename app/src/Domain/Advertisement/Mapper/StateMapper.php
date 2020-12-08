@@ -26,6 +26,6 @@ class StateMapper
                 return new ArchivedState();
         }
 
-        throw new InvalidArgumentException("UNDEFINED_STATE");
+        throw new InvalidArgumentException('UNDEFINED_STATE');
     }
 }

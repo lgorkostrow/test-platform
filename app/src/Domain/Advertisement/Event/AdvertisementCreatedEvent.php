@@ -8,9 +8,6 @@ use App\Domain\Common\Event\DomainEventInterface;
 
 class AdvertisementCreatedEvent implements DomainEventInterface
 {
-    /**
-     * @var string
-     */
     private string $advertisementId;
 
     public function __construct(string $advertisementId)
@@ -18,9 +15,6 @@ class AdvertisementCreatedEvent implements DomainEventInterface
         $this->advertisementId = $advertisementId;
     }
 
-    /**
-     * @return string
-     */
     public function getAdvertisementId(): string
     {
         return $this->advertisementId;

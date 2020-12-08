@@ -8,9 +8,6 @@ use App\Domain\Common\Message\AsyncMessageInterface;
 
 class VerifyUserEmailCommand implements AsyncMessageInterface
 {
-    /**
-     * @var string
-     */
     private string $userId;
 
     public function __construct(string $userId)
@@ -18,9 +15,6 @@ class VerifyUserEmailCommand implements AsyncMessageInterface
         $this->userId = $userId;
     }
 
-    /**
-     * @return string
-     */
     public function getUserId(): string
     {
         return $this->userId;

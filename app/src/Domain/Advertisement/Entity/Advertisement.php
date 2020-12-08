@@ -108,9 +108,6 @@ class Advertisement implements TimestampableInterface, RaiseEventsInterface
         $this->raise(new AdvertisementCreatedEvent($id));
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
@@ -180,7 +177,7 @@ class Advertisement implements TimestampableInterface, RaiseEventsInterface
         return $this;
     }
 
-    private function changeState(AbstractState $state)
+    private function changeState(AbstractState $state): void
     {
         if (!$this->state->canBeChangedTo($state)) {
             throw new BusinessException('NOT_ACCEPTABLE_STATE');

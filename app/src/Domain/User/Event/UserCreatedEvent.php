@@ -8,9 +8,6 @@ use App\Domain\Common\Event\DomainEventInterface;
 
 class UserCreatedEvent implements DomainEventInterface
 {
-    /**
-     * @var string
-     */
     private string $userId;
 
     public function __construct(string $userId)
@@ -18,9 +15,6 @@ class UserCreatedEvent implements DomainEventInterface
         $this->userId = $userId;
     }
 
-    /**
-     * @return string
-     */
     public function getUserId(): string
     {
         return $this->userId;

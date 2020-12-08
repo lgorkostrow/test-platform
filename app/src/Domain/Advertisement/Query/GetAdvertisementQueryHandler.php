@@ -10,9 +10,6 @@ use App\Domain\Common\Message\QueryHandlerInterface;
 
 class GetAdvertisementQueryHandler implements QueryHandlerInterface
 {
-    /**
-     * @var AdvertisementRepositoryInterface
-     */
     private AdvertisementRepositoryInterface $advertisementRepository;
 
     public function __construct(AdvertisementRepositoryInterface $advertisementRepository)
@@ -20,7 +17,7 @@ class GetAdvertisementQueryHandler implements QueryHandlerInterface
         $this->advertisementRepository = $advertisementRepository;
     }
 
-    public function __invoke(GetAdvertisementQuery $query)
+    public function __invoke(GetAdvertisementQuery $query): ?AdvertisementDetailedViewDto
     {
         if (null === $view = $this->advertisementRepository->findDetailedView($query->getId())) {
             return null;

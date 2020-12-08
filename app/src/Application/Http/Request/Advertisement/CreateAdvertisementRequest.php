@@ -71,9 +71,6 @@ class CreateAdvertisementRequest
      */
     public $attachments;
 
-    /**
-     * @param AttachmentDto $dto
-     */
     public function addAttachment(AttachmentDto $dto): void
     {
         $this->attachments[] = $dto;

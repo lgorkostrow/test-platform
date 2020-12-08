@@ -20,7 +20,7 @@ use Ramsey\Uuid\Uuid;
 
 class AdvertisementFixtures extends AbstractFixture implements DependentFixtureInterface
 {
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return [
             UserFixtures::class,
@@ -28,7 +28,7 @@ class AdvertisementFixtures extends AbstractFixture implements DependentFixtureI
         ];
     }
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $categories = $this->entityManager->getRepository(Category::class)->findAll();
         foreach ($this->getUsers() as $user) {

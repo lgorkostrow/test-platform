@@ -8,7 +8,7 @@ use App\Domain\Common\State\AbstractState;
 
 class DraftState extends AbstractState
 {
-    const NAME = 'draft';
+    public const NAME = 'draft';
 
     /**
      * @var array|string[]

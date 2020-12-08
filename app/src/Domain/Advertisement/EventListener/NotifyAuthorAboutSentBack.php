@@ -12,19 +12,10 @@ use App\Domain\User\Repository\UserRepositoryInterface;
 
 class NotifyAuthorAboutSentBack implements DomainEventHandlerInterface
 {
-    /**
-     * @var UserRepositoryInterface
-     */
     private UserRepositoryInterface $userRepository;
 
-    /**
-     * @var AdvertisementRepositoryInterface
-     */
     private AdvertisementRepositoryInterface $advertisementRepository;
 
-    /**
-     * @var SenderInterface
-     */
     private SenderInterface $emailSender;
 
     public function __construct(
@@ -37,7 +28,7 @@ class NotifyAuthorAboutSentBack implements DomainEventHandlerInterface
         $this->emailSender = $emailSender;
     }
 
-    public function __invoke(AdvertisementSentBackEvent $event)
+    public function __invoke(AdvertisementSentBackEvent $event): void
     {
         $author = $this->userRepository->findOrFail($event->getAuthorId());
         $advertisement = $this->advertisementRepository->findOrFail($event->getAdvertisementId());

@@ -10,14 +10,8 @@ use App\Domain\User\Dto\UserDto;
 
 class SignUpCommand implements AsyncMessageInterface, ValidatableCommandInterface
 {
-    /**
-     * @var string
-     */
     private string $id;
 
-    /**
-     * @var UserDto
-     */
     private UserDto $dto;
 
     public function __construct(string $id, UserDto $dto)
@@ -26,17 +20,11 @@ class SignUpCommand implements AsyncMessageInterface, ValidatableCommandInterfac
         $this->dto = $dto;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return UserDto
-     */
     public function getDto(): UserDto
     {
         return $this->dto;

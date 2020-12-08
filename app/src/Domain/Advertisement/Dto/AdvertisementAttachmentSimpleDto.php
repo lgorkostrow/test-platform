@@ -8,19 +8,10 @@ use App\Domain\Advertisement\View\AttachmentView;
 
 class AdvertisementAttachmentSimpleDto
 {
-    /**
-     * @var string
-     */
     private string $id;
 
-    /**
-     * @var bool
-     */
     private bool $featured;
 
-    /**
-     * @var string
-     */
     private string $path;
 
     public function __construct(string $id, bool $featured, string $path)
@@ -35,25 +26,16 @@ class AdvertisementAttachmentSimpleDto
         return new self($view->getId(), $view->isFeatured(), $view->getPath());
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return bool
-     */
     public function isFeatured(): bool
     {
         return $this->featured;
     }
 
-    /**
-     * @return string
-     */
     public function getPath(): string
     {
         return $this->path;

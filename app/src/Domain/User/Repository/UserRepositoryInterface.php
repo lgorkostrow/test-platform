@@ -19,9 +19,5 @@ interface UserRepositoryInterface extends BaseEntityRepositoryInterface
      */
     public function findOrFail(string $id): object;
 
-    /**
-     * @param string $email
-     * @return User|null
-     */
     public function findByEmail(string $email): ?User;
 }

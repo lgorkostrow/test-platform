@@ -8,9 +8,6 @@ use App\Domain\Common\Message\AsyncMessageInterface;
 
 class SendAdvertisementToReviewCommand implements AsyncMessageInterface
 {
-    /**
-     * @var string
-     */
     private string $advertisementId;
 
     public function __construct(string $advertisementId)
@@ -18,9 +15,6 @@ class SendAdvertisementToReviewCommand implements AsyncMessageInterface
         $this->advertisementId = $advertisementId;
     }
 
-    /**
-     * @return string
-     */
     public function getAdvertisementId(): string
     {
         return $this->advertisementId;

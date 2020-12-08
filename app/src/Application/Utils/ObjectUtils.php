@@ -28,7 +28,7 @@ class ObjectUtils
 
         $annotationReader = new AnnotationReader();
 
-        return !empty($annotationReader->getClassAnnotation(new ReflectionClass($object), Entity::class));
+        return $annotationReader->getClassAnnotation(new ReflectionClass($object), Entity::class) !== null;
     }
 
     /**

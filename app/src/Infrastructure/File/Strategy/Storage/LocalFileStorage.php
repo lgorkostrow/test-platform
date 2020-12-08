@@ -6,13 +6,11 @@ namespace App\Infrastructure\File\Strategy\Storage;
 
 use App\Domain\File\Enum\StorageTypeEnum;
 use App\Domain\File\Storage\FileStorageInterface;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\File\File;
 
 class LocalFileStorage implements FileStorageInterface
 {
-    /**
-     * @var string
-     */
     private string $fileDir;
 
     public function __construct(string $fileDir)
@@ -45,8 +43,8 @@ class LocalFileStorage implements FileStorageInterface
 
     private function checkDir(): void
     {
-        if (!is_dir($this->fileDir)) {
-            mkdir($this->fileDir);
+        if (!is_dir($this->fileDir) && !mkdir($concurrentDirectory = $this->fileDir) && !is_dir($concurrentDirectory)) {
+            throw new RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
     }
 }

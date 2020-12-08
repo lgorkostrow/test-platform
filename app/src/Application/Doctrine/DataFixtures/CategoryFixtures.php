@@ -10,14 +10,14 @@ use Ramsey\Uuid\Uuid;
 
 class CategoryFixtures extends AbstractFixture
 {
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->createCategories($manager, 10);
 
         $manager->flush();
     }
 
-    private function createCategories(ObjectManager $manager, int $count = 10)
+    private function createCategories(ObjectManager $manager, int $count = 10): void
     {
         for ($i = 0; $i < $count; $i++) {
             $category = new Category(

@@ -8,19 +8,10 @@ use App\Domain\Common\Event\DomainEventInterface;
 
 class AdvertisementSentBackEvent implements DomainEventInterface
 {
-    /**
-     * @var string
-     */
     private string $advertisementId;
 
-    /**
-     * @var string
-     */
     private string $authorId;
 
-    /**
-     * @var string
-     */
     private string $reason;
 
     public function __construct(string $advertisementId, string $authorId, string $reason)
@@ -30,25 +21,16 @@ class AdvertisementSentBackEvent implements DomainEventInterface
         $this->reason = $reason;
     }
 
-    /**
-     * @return string
-     */
     public function getAdvertisementId(): string
     {
         return $this->advertisementId;
     }
 
-    /**
-     * @return string
-     */
     public function getAuthorId(): string
     {
         return $this->authorId;
     }
 
-    /**
-     * @return string
-     */
     public function getReason(): string
     {
         return $this->reason;

@@ -17,14 +17,8 @@ class FileNormalizer implements ContextAwareNormalizerInterface
         AdvertisementAttachmentSimpleDto::class => 'path',
     ];
 
-    /**
-     * @var string
-     */
     private string $publicDir;
 
-    /**
-     * @var ObjectNormalizer
-     */
     private ObjectNormalizer $objectNormalizer;
 
     public function __construct(string $publicDir, ObjectNormalizer $objectNormalizer)
@@ -35,7 +29,7 @@ class FileNormalizer implements ContextAwareNormalizerInterface
 
     public function supportsNormalization($data, string $format = null, array $context = []): bool
     {
-        return is_object($data) && in_array(get_class($data), array_keys(self::MAP));
+        return is_object($data) && array_key_exists(get_class($data), self::MAP);
     }
 
     public function normalize($object, string $format = null, array $context = [])

@@ -11,13 +11,9 @@ use App\Domain\Advertisement\Dto\AdvertisementDto;
 use App\Domain\Advertisement\UseCase\CreateAdvertisementCommand;
 use App\Domain\User\Entity\User;
 use Ramsey\Uuid\Uuid;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class CreateAdvertisementCommandFactory
 {
-    /**
-     * @var AdvertisementAttachmentDtoFactory
-     */
     private AdvertisementAttachmentDtoFactory $fileDtoFactory;
 
     public function __construct(AdvertisementAttachmentDtoFactory $fileDtoFactory)

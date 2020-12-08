@@ -9,9 +9,6 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ValidationService
 {
-    /**
-     * @var ValidatorInterface
-     */
     private ValidatorInterface $validator;
 
     public function __construct(ValidatorInterface $validator)

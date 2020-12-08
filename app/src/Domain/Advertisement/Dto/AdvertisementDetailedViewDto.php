@@ -10,34 +10,16 @@ use DateTimeInterface;
 
 class AdvertisementDetailedViewDto
 {
-    /**
-     * @var string
-     */
     private string $id;
 
-    /**
-     * @var string
-     */
     private string $title;
 
-    /**
-     * @var string
-     */
     private string $description;
 
-    /**
-     * @var PriceDto
-     */
     private PriceDto $price;
 
-    /**
-     * @var AuthorDto
-     */
     private AuthorDto $author;
 
-    /**
-     * @var DateTimeInterface
-     */
     private DateTimeInterface $createdAt;
 
     /**
@@ -72,53 +54,35 @@ class AdvertisementDetailedViewDto
             new PriceDto($view->getPrice(), $view->getCurrency()),
             new AuthorDto($view->getAuthorId(), $view->getAuthorFullName(), $view->getAuthorEmail()),
             $view->getCreatedAt(),
-            array_map(fn(AttachmentView $view) => AdvertisementAttachmentSimpleDto::createFromView($view), $view->getAttachments()),
+            array_map(static fn(AttachmentView $view) => AdvertisementAttachmentSimpleDto::createFromView($view), $view->getAttachments()),
         );
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @return string
-     */
     public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @return PriceDto
-     */
     public function getPrice(): PriceDto
     {
         return $this->price;
     }
 
-    /**
-     * @return AuthorDto
-     */
     public function getAuthor(): AuthorDto
     {
         return $this->author;
     }
 
-    /**
-     * @return DateTimeInterface
-     */
     public function getCreatedAt(): DateTimeInterface
     {
         return $this->createdAt;

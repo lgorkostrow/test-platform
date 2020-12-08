@@ -12,14 +12,8 @@ use App\Domain\User\ValueObject\PersonalData;
 
 class UserFactory
 {
-    /**
-     * @var TokenGeneratorInterface
-     */
     private TokenGeneratorInterface $generator;
 
-    /**
-     * @var PasswordEncoderInterface
-     */
     private PasswordEncoderInterface $encoder;
 
     public function __construct(TokenGeneratorInterface $generator, PasswordEncoderInterface $encoder)
@@ -28,11 +22,6 @@ class UserFactory
         $this->encoder = $encoder;
     }
 
-    /**
-     * @param string $id
-     * @param UserDto $dto
-     * @return User
-     */
     public function create(string $id, UserDto $dto): User
     {
         $user = User::createUser(

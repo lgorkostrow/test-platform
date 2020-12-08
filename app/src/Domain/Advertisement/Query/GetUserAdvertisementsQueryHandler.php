@@ -12,9 +12,6 @@ use App\Domain\Common\Repository\PaginatedQueryResult;
 
 class GetUserAdvertisementsQueryHandler implements QueryHandlerInterface
 {
-    /**
-     * @var AdvertisementRepositoryInterface
-     */
     private AdvertisementRepositoryInterface $advertisementRepository;
 
     public function __construct(AdvertisementRepositoryInterface $advertisementRepository)
@@ -26,7 +23,7 @@ class GetUserAdvertisementsQueryHandler implements QueryHandlerInterface
     {
         $paginatedData = $this->advertisementRepository->findUserAdvertisements($query);
         $paginatedData->setData(
-            array_map(function (AdvertisementListItemView $view) {
+            array_map(static function (AdvertisementListItemView $view) {
                 return AdvertisementListItemDto::createFromAdvertisementListItemView($view);
             }, $paginatedData->getData())
         );

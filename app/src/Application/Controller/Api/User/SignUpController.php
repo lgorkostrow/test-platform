@@ -25,9 +25,6 @@ use Nelmio\ApiDocBundle\Annotation\Model;
  */
 class SignUpController extends AbstractFOSRestController
 {
-    /**
-     * @var MessageBusInterface
-     */
     private MessageBusInterface $commandBus;
 
     public function __construct(MessageBusInterface $commandBus)
@@ -62,7 +59,7 @@ class SignUpController extends AbstractFOSRestController
      * @param ValidationService $validationService
      * @return array
      */
-    public function signUp(Request $request, DtoConverter $converter, ValidationService $validationService)
+    public function signUp(Request $request, DtoConverter $converter, ValidationService $validationService): array
     {
         $signUpRequest = $validationService->validate(
             $converter->convertToDto(SignUpRequest::class, $request->request->all())
@@ -94,7 +91,7 @@ class SignUpController extends AbstractFOSRestController
      * @param JwtTokenManager $tokenManager
      * @return array
      */
-    public function verifyEmailAction(User $user, JwtTokenManager $tokenManager)
+    public function verifyEmailAction(User $user, JwtTokenManager $tokenManager): array
     {
         $this->commandBus->dispatch(
             new VerifyUserEmailCommand($user->getId())

@@ -5,14 +5,10 @@ declare(strict_types=1);
 namespace App\Domain\Advertisement\UseCase;
 
 use App\Domain\Advertisement\Repository\AdvertisementRepositoryInterface;
-use App\Domain\Common\Exception\EntityNotFoundException;
 use App\Domain\Common\Message\CommandHandlerInterface;
 
 class SendAdvertisementToReviewCommandHandler implements CommandHandlerInterface
 {
-    /**
-     * @var AdvertisementRepositoryInterface
-     */
     private AdvertisementRepositoryInterface $repository;
 
     public function __construct(AdvertisementRepositoryInterface $repository)
@@ -20,7 +16,7 @@ class SendAdvertisementToReviewCommandHandler implements CommandHandlerInterface
         $this->repository = $repository;
     }
 
-    public function __invoke(SendAdvertisementToReviewCommand $command)
+    public function __invoke(SendAdvertisementToReviewCommand $command): void
     {
         $advertisement = $this->repository->findOrFail($command->getAdvertisementId());
         $advertisement->sendToReview();

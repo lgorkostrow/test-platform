@@ -11,14 +11,8 @@ use App\Domain\User\ValueObject\PersonalData;
 
 class UpdatePersonalDataCommandHandler implements CommandHandlerInterface
 {
-    /**
-     * @var UserRepositoryInterface
-     */
     private UserRepositoryInterface $repository;
 
-    /**
-     * @var TokenGeneratorInterface
-     */
     private TokenGeneratorInterface $generator;
 
     public function __construct(UserRepositoryInterface $repository, TokenGeneratorInterface $generator)
@@ -27,7 +21,7 @@ class UpdatePersonalDataCommandHandler implements CommandHandlerInterface
         $this->generator = $generator;
     }
 
-    public function __invoke(UpdatePersonalDataCommand $command)
+    public function __invoke(UpdatePersonalDataCommand $command): void
     {
         $user = $this->repository->findOrFail($command->getUserId());
 

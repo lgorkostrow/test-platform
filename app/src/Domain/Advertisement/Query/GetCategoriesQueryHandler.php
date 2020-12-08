@@ -8,12 +8,10 @@ use App\Domain\Advertisement\Dto\CategoryListItemDto;
 use App\Domain\Advertisement\Repository\CategoryRepositoryInterface;
 use App\Domain\Advertisement\View\CategoryListItemView;
 use App\Domain\Common\Message\QueryHandlerInterface;
+use App\Domain\Common\Repository\PaginatedQueryResult;
 
 class GetCategoriesQueryHandler implements QueryHandlerInterface
 {
-    /**
-     * @var CategoryRepositoryInterface
-     */
     private CategoryRepositoryInterface $repository;
 
     public function __construct(CategoryRepositoryInterface $repository)
@@ -21,11 +19,11 @@ class GetCategoriesQueryHandler implements QueryHandlerInterface
         $this->repository = $repository;
     }
 
-    public function __invoke(GetCategoriesQuery $query)
+    public function __invoke(GetCategoriesQuery $query): PaginatedQueryResult
     {
         $paginatedData = $this->repository->findAllCategories($query);
         $paginatedData->setData(
-            array_map(function (CategoryListItemView $view) {
+            array_map(static function (CategoryListItemView $view) {
                 return CategoryListItemDto::createFromView($view);
             }, $paginatedData->getData())
         );

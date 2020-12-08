@@ -8,7 +8,7 @@ use App\Domain\Common\State\AbstractState;
 
 class PublishedState extends AbstractState
 {
-    const NAME = 'published';
+    public const NAME = 'published';
 
     /**
      * @var array|string[]

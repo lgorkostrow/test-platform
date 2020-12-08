@@ -6,7 +6,6 @@ namespace App\Application\Validator\Constraints;
 
 use App\Application\Mapper\DtoToEntityMapper;
 use App\Application\Utils\ArrayUtils;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
@@ -16,9 +15,6 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class UniqueDtoValidator extends UniqueEntityValidator
 {
-    /**
-     * @var ManagerRegistry
-     */
     private ManagerRegistry $registry;
 
     public function __construct(ManagerRegistry $registry)

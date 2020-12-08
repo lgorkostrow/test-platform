@@ -25,9 +25,6 @@ use Nelmio\ApiDocBundle\Annotation\Model;
  */
 class UserController extends AbstractFOSRestController
 {
-    /**
-     * @var MessageBusInterface
-     */
     private MessageBusInterface $commandBus;
 
     public function __construct(MessageBusInterface $commandBus)
@@ -57,7 +54,7 @@ class UserController extends AbstractFOSRestController
      * @param DtoConverter $converter
      * @param ValidationService $validationService
      */
-    public function updatePersonalData(Request $request, DtoConverter $converter, ValidationService $validationService)
+    public function updatePersonalData(Request $request, DtoConverter $converter, ValidationService $validationService): void
     {
         $data = array_merge($request->request->all(), ['id' => $this->getUser()->getId()]);
         $updatePersonalDataRequest = $validationService->validate($converter->convertToDto(
@@ -92,7 +89,7 @@ class UserController extends AbstractFOSRestController
      * @param JwtTokenManager $tokenManager
      * @return array
      */
-    public function verifyNewUserEmail(ParamFetcherInterface $paramFetcher, JwtTokenManager $tokenManager)
+    public function verifyNewUserEmail(ParamFetcherInterface $paramFetcher, JwtTokenManager $tokenManager): array
     {
         $this->commandBus->dispatch(
             new VerifyNewUserEmailCommand($this->getUser()->getId(), $paramFetcher->get('token'))

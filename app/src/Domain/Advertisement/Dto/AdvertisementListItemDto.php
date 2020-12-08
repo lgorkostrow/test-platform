@@ -9,34 +9,16 @@ use App\Domain\Common\State\AbstractState;
 
 class AdvertisementListItemDto
 {
-    /**
-     * @var string
-     */
     private string $id;
 
-    /**
-     * @var string
-     */
     private string $title;
 
-    /**
-     * @var string
-     */
     private string $state;
 
-    /**
-     * @var CategoryListItemDto
-     */
     private CategoryListItemDto $category;
 
-    /**
-     * @var PriceDto
-     */
     private PriceDto $price;
 
-    /**
-     * @var string|null
-     */
     private ?string $featuredImage;
 
     public function __construct(
@@ -67,49 +49,31 @@ class AdvertisementListItemDto
         );
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @return string
-     */
     public function getState(): string
     {
         return $this->state;
     }
 
-    /**
-     * @return CategoryListItemDto
-     */
     public function getCategory(): CategoryListItemDto
     {
         return $this->category;
     }
 
-    /**
-     * @return PriceDto
-     */
     public function getPrice(): PriceDto
     {
         return $this->price;
     }
 
-    /**
-     * @return string|null
-     */
     public function getFeaturedImage(): ?string
     {
         return $this->featuredImage;

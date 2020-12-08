@@ -6,9 +6,6 @@ namespace App\Application\Exception;
 
 class FilesNotMappedException extends AbstractAppInformativeException
 {
-    /**
-     * @var array
-     */
     private array $fileKeys;
 
     public function __construct(array $fileKeys)

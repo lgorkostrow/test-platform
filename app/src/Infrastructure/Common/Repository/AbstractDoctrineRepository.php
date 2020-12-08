@@ -14,11 +14,6 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 abstract class AbstractDoctrineRepository extends ServiceEntityRepository implements BaseEntityRepositoryInterface
 {
-    /**
-     * @param QueryBuilder $qb
-     * @param AbstractListQuery $params
-     * @return PaginatedQueryResult
-     */
     public function paginate(QueryBuilder $qb, AbstractListQuery $params): PaginatedQueryResult
     {
         $paginator = new Paginator($qb->getQuery());
@@ -40,16 +35,12 @@ abstract class AbstractDoctrineRepository extends ServiceEntityRepository implem
     {
         $entity = $this->find($id);
         if (!$entity) {
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException($this->getClassName());
         }
 
         return $entity;
     }
 
-    /**
-     * @param object $entity
-     * @return object
-     */
     public function save(object $entity): object
     {
         $this->_em->persist($entity);
@@ -73,9 +64,6 @@ abstract class AbstractDoctrineRepository extends ServiceEntityRepository implem
         return $entities;
     }
 
-    /**
-     * @param object $entity
-     */
     public function remove(object $entity): void
     {
         $this->_em->remove($entity);

@@ -27,7 +27,7 @@ class ChoiceQueryParam extends QueryParam
         return parent::getDefault();
     }
 
-    protected function mutateDescriptionField()
+    protected function mutateDescriptionField(): void
     {
         if ($this->description) {
             return;

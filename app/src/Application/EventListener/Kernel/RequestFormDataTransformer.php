@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class RequestFormDataTransformer
 {
-    public function onKernelRequest(RequestEvent $event)
+    public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
 
@@ -35,7 +35,7 @@ class RequestFormDataTransformer
 
         if ($request->files->count()) {
             $files = $request->files->all();
-            array_walk_recursive($data, function (&$value, $key) use (&$files) {
+            array_walk_recursive($data, static function (&$value, $key) use (&$files) {
                 if (in_array($value, array_keys($files), true)) {
                     $key = $value;
                     $value = $files[$value];

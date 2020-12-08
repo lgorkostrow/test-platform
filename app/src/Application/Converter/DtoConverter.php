@@ -9,9 +9,6 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class DtoConverter
 {
-    /**
-     * @var SerializerInterface
-     */
     private SerializerInterface $serializer;
 
     public function __construct(SerializerInterface $serializer)

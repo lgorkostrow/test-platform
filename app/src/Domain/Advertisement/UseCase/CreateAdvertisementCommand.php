@@ -9,14 +9,8 @@ use App\Domain\Common\Message\AsyncMessageInterface;
 
 class CreateAdvertisementCommand implements AsyncMessageInterface
 {
-    /**
-     * @var string
-     */
     private string $id;
 
-    /**
-     * @var AdvertisementDto
-     */
     private AdvertisementDto $dto;
 
     public function __construct(string $id, AdvertisementDto $dto)
@@ -25,17 +19,11 @@ class CreateAdvertisementCommand implements AsyncMessageInterface
         $this->dto = $dto;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return AdvertisementDto
-     */
     public function getDto(): AdvertisementDto
     {
         return $this->dto;

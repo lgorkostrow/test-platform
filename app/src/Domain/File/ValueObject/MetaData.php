@@ -41,25 +41,16 @@ class MetaData
         $this->mimeType = $mimeType;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return float
-     */
     public function getSize(): float
     {
         return $this->size;
     }
 
-    /**
-     * @return string
-     */
     public function getMimeType(): string
     {
         return $this->mimeType;

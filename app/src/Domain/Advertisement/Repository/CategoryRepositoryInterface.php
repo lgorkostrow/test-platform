@@ -21,9 +21,5 @@ interface CategoryRepositoryInterface extends BaseEntityRepositoryInterface
      */
     public function findOrFail(string $id): object;
 
-    /**
-     * @param GetCategoriesQuery $query
-     * @return PaginatedQueryResult
-     */
     public function findAllCategories(GetCategoriesQuery $query): PaginatedQueryResult;
 }

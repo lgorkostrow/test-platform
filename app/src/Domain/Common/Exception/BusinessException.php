@@ -8,7 +8,7 @@ use RuntimeException;
 
 class BusinessException extends RuntimeException
 {
-    public function __construct($message = "")
+    public function __construct($message = '')
     {
         parent::__construct($message, 400);
     }

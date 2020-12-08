@@ -11,19 +11,10 @@ use Twig\Environment;
 
 class EmailSender implements SenderInterface
 {
-    /**
-     * @var MailerInterface
-     */
     private MailerInterface $mailer;
 
-    /**
-     * @var string
-     */
     private string $from;
 
-    /**
-     * @var Environment
-     */
     private Environment $twig;
 
     public function __construct(MailerInterface $mailer, string $from, Environment $twig)
@@ -33,21 +24,11 @@ class EmailSender implements SenderInterface
         $this->twig = $twig;
     }
 
-    /**
-     * @param string $template
-     * @param array $data
-     * @return string
-     */
     public function generateBody(string $template, array $data): string
     {
         return $this->twig->render($template, $data);
     }
 
-    /**
-     * @param string $to
-     * @param string $subject
-     * @param string $body
-     */
     public function send(string $to, string $subject, string $body): void
     {
         $email = (new Email())

@@ -18,9 +18,6 @@ class FileManager
      */
     private iterable $strategies;
 
-    /**
-     * @var FileFactory
-     */
     private FileFactory $factory;
 
     public function __construct(iterable $strategies, FileFactory $factory)

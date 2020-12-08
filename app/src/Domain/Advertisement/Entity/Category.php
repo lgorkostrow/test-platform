@@ -65,9 +65,6 @@ class Category
         $this->subcategories = new ArrayCollection();
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;

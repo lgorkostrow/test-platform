@@ -14,10 +14,6 @@ interface BaseEntityRepositoryInterface
      */
     public function findOrFail(string $id): object;
 
-    /**
-     * @param object $entity
-     * @return object
-     */
     public function save(object $entity): object;
 
     /**
@@ -26,8 +22,5 @@ interface BaseEntityRepositoryInterface
      */
     public function saveAll(array $entities): array;
 
-    /**
-     * @param object $entity
-     */
     public function remove(object $entity): void;
 }

@@ -5,28 +5,19 @@ declare(strict_types=1);
 namespace App\Application\Mapper;
 
 use App\Application\Utils\ArrayUtils;
+use ArrayIterator;
+use InvalidArgumentException;
+use Iterator;
 use ReflectionClass;
 
 class DtoToEntityMapper
 {
-    /**
-     * @var object
-     */
     private object $entity;
 
-    /**
-     * @var object
-     */
     private object $dto;
 
-    /**
-     * @var ReflectionClass
-     */
     private ReflectionClass $entityReflection;
 
-    /**
-     * @var ReflectionClass
-     */
     private ReflectionClass $dtoReflection;
 
     public function __construct($dto)
@@ -47,7 +38,7 @@ class DtoToEntityMapper
 
         if (ArrayUtils::isAssocArray($fields)) {
             foreach ($fields as $dtoField => $entityField) {
-                $dtoField = is_integer($dtoField) ? $entityField : $dtoField;
+                $dtoField = is_int($dtoField) ? $entityField : $dtoField;
 
                 $this->fillField($dtoField, $entityField);
             }
@@ -65,7 +56,7 @@ class DtoToEntityMapper
         return $this->dtoReflection;
     }
 
-    private function fillField(string $dtoFieldName, string $entityFieldName)
+    private function fillField(string $dtoFieldName, string $entityFieldName): void
     {
         $this->checkField($this->dtoReflection, $dtoFieldName);
 
@@ -75,7 +66,7 @@ class DtoToEntityMapper
         if (str_contains($entityFieldName, '.')) {
             $parts = explode('.', $entityFieldName);
 
-            $this->fillEmbedded($this->entityReflection, $this->entity, new \ArrayIterator($parts), $dtoProperty->getValue($this->dto));
+            $this->fillEmbedded($this->entityReflection, $this->entity, new ArrayIterator($parts), $dtoProperty->getValue($this->dto));
         } else {
             $this->checkField($this->entityReflection, $entityFieldName);
 
@@ -88,15 +79,10 @@ class DtoToEntityMapper
         }
     }
 
-    /**
-     * @param ReflectionClass $reflectionClass
-     * @param string $fieldName
-     * @return bool
-     */
-    private function checkField(ReflectionClass $reflectionClass, string $fieldName)
+    private function checkField(ReflectionClass $reflectionClass, string $fieldName): bool
     {
         if (!$reflectionClass->hasProperty($fieldName)) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Property %s of class %s does not exist',
                 $fieldName,
                 $reflectionClass->name
@@ -106,7 +92,7 @@ class DtoToEntityMapper
         return true;
     }
 
-    private function fillEmbedded(ReflectionClass $reflectionClass, object $object, \Iterator $fields, $value): void
+    private function fillEmbedded(ReflectionClass $reflectionClass, object $object, Iterator $fields, $value): void
     {
         $fieldName = $fields->current();
         $this->checkField($reflectionClass, $fieldName);
@@ -116,7 +102,7 @@ class DtoToEntityMapper
 
         $embeddedType = $property->getType();
         if (null === $embeddedType) {
-            throw new \InvalidArgumentException(sprintf('Undefined type of property %s', $fieldName));
+            throw new InvalidArgumentException(sprintf('Undefined type of property %s', $fieldName));
         }
 
         if ($embeddedType->isBuiltin()) {

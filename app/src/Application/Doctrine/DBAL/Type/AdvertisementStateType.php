@@ -16,9 +16,9 @@ use InvalidArgumentException;
 
 class AdvertisementStateType extends Type
 {
-    const NAME = 'advertisement_state';
+    public const NAME = 'advertisement_state';
 
-    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform): string
     {
         return sprintf(
             "ENUM('%s', '%s', '%s', '%s') COMMENT '(DC2Type: %s)'",
@@ -30,26 +30,26 @@ class AdvertisementStateType extends Type
         );
     }
 
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): AbstractState
     {
         return StateMapper::mapStateNameToObject($value);
     }
 
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
+    public function convertToDatabaseValue($value, AbstractPlatform $platform): string
     {
         if (!$value instanceof AbstractState) {
-            throw new InvalidArgumentException("UNDEFINED_STATE");
+            throw new InvalidArgumentException('UNDEFINED_STATE');
         }
 
         return $value::NAME;
     }
 
-    public function getName()
+    public function getName(): string
     {
         return self::NAME;
     }
 
-    public function requiresSQLCommentHint(AbstractPlatform $platform)
+    public function requiresSQLCommentHint(AbstractPlatform $platform): bool
     {
         return true;
     }

@@ -11,19 +11,10 @@ use App\Domain\File\Manager\FileManager;
 
 class CreateAdvertisementCommandHandler implements CommandHandlerInterface
 {
-    /**
-     * @var AdvertisementRepositoryInterface
-     */
     private AdvertisementRepositoryInterface $advertisementRepository;
 
-    /**
-     * @var AdvertisementFactory
-     */
     private AdvertisementFactory $factory;
 
-    /**
-     * @var FileManager
-     */
     private FileManager $fileManager;
 
     public function __construct(
@@ -36,7 +27,7 @@ class CreateAdvertisementCommandHandler implements CommandHandlerInterface
         $this->fileManager = $fileManager;
     }
 
-    public function __invoke(CreateAdvertisementCommand $command)
+    public function __invoke(CreateAdvertisementCommand $command): void
     {
         $advertisement = $this->factory->create($command->getId(), $command->getDto());
         foreach ($command->getDto()->getAttachments() as $fileDto) {

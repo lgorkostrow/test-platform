@@ -6,29 +6,14 @@ namespace App\Domain\User\Dto;
 
 class UserDto
 {
-    /**
-     * @var string
-     */
     private string $email;
 
-    /**
-     * @var string
-     */
     private string $password;
 
-    /**
-     * @var string
-     */
     private string $firstName;
 
-    /**
-     * @var string
-     */
     private string $lastName;
 
-    /**
-     * @var string|null
-     */
     private ?string $biography;
 
     public function __construct(string $email, string $password, string $firstName, string $lastName, ?string $biography)
@@ -40,41 +25,26 @@ class UserDto
         $this->biography = $biography;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @return string
-     */
     public function getPassword(): string
     {
         return $this->password;
     }
 
-    /**
-     * @return string
-     */
     public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    /**
-     * @return string
-     */
     public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    /**
-     * @return string|null
-     */
     public function getBiography(): ?string
     {
         return $this->biography;

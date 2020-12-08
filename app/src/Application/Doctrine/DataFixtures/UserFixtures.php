@@ -21,7 +21,7 @@ class UserFixtures extends AbstractFixture
         $manager->flush();
     }
 
-    private function createUsers(ObjectManager $manager, int $count = 10, bool $verified = true)
+    private function createUsers(ObjectManager $manager, int $count = 10, bool $verified = true): void
     {
         for ($i = 0; $i < $count; $i++) {
             $user = User::createUser(
@@ -38,7 +38,7 @@ class UserFixtures extends AbstractFixture
         }
     }
 
-    private function createAdmins(ObjectManager $manager, int $count = 10)
+    private function createAdmins(ObjectManager $manager, int $count = 10): void
     {
         for ($i = 0; $i < $count; $i++) {
             $user = User::createAdmin(
@@ -53,7 +53,7 @@ class UserFixtures extends AbstractFixture
         }
     }
 
-    private function createManagers(ObjectManager $manager, int $count = 10)
+    private function createManagers(ObjectManager $manager, int $count = 10): void
     {
         for ($i = 0; $i < $count; $i++) {
             $user = User::createManager(

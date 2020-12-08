@@ -8,14 +8,8 @@ use App\Domain\Advertisement\View\CategoryListItemView;
 
 class CategoryListItemDto
 {
-    /**
-     * @var string
-     */
     private string $id;
 
-    /**
-     * @var string
-     */
     private string $name;
 
     public function __construct(string $id, string $name)
@@ -29,17 +23,11 @@ class CategoryListItemDto
         return new self($view->getId(), $view->getName());
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;

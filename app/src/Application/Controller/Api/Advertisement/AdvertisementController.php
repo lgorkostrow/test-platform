@@ -45,24 +45,12 @@ use Nelmio\ApiDocBundle\Annotation\Model;
  */
 class AdvertisementController extends AbstractFOSRestController
 {
-    /**
-     * @var MessageBusInterface
-     */
     private MessageBusInterface $commandBus;
 
-    /**
-     * @var MessageBusInterface
-     */
     private MessageBusInterface $queryBus;
 
-    /**
-     * @var DtoConverter
-     */
     private DtoConverter $converter;
 
-    /**
-     * @var ValidationService
-     */
     private ValidationService $validationService;
 
     public function __construct(
@@ -101,7 +89,7 @@ class AdvertisementController extends AbstractFOSRestController
      * @param ParamFetcherInterface $paramFetcher
      * @return PaginatedQueryResult
      */
-    public function getPublished(ParamFetcherInterface $paramFetcher)
+    public function getPublished(ParamFetcherInterface $paramFetcher): PaginatedQueryResult
     {
         $envelope = $this->queryBus->dispatch(new GetPublishedAdvertisementsQuery(
             (int)$paramFetcher->get('limit'),
@@ -141,7 +129,7 @@ class AdvertisementController extends AbstractFOSRestController
      * @param ParamFetcherInterface $paramFetcher
      * @return PaginatedQueryResult
      */
-    public function getForCurrentUser(ParamFetcherInterface $paramFetcher)
+    public function getForCurrentUser(ParamFetcherInterface $paramFetcher): PaginatedQueryResult
     {
         $envelope = $this->queryBus->dispatch(new GetUserAdvertisementsQuery(
             (int)$paramFetcher->get('limit'),
@@ -177,7 +165,7 @@ class AdvertisementController extends AbstractFOSRestController
      * @param ParamFetcherInterface $paramFetcher
      * @return PaginatedQueryResult
      */
-    public function getReadyForReview(ParamFetcherInterface $paramFetcher)
+    public function getReadyForReview(ParamFetcherInterface $paramFetcher): PaginatedQueryResult
     {
         $envelope = $this->queryBus->dispatch(new GetReadyForReviewAdvertisementsQuery(
             (int)$paramFetcher->get('limit'),
@@ -202,7 +190,7 @@ class AdvertisementController extends AbstractFOSRestController
      * @param string $id
      * @return AdvertisementDetailedViewDto
      */
-    public function getDetailedView(string $id)
+    public function getDetailedView(string $id): AdvertisementDetailedViewDto
     {
         // TODO Need to check permission
         $result = MessengerUtils::getResultFromEnvelope(
@@ -241,7 +229,7 @@ class AdvertisementController extends AbstractFOSRestController
      * @param CreateAdvertisementCommandFactory $factory
      * @return array
      */
-    public function create(Request $request, CreateAdvertisementCommandFactory $factory)
+    public function create(Request $request, CreateAdvertisementCommandFactory $factory): array
     {
         $createAdvertisementRequest = $this->validationService->validate(
             $this->converter->convertToDto(CreateAdvertisementRequest::class, $request->request->all())
@@ -263,7 +251,7 @@ class AdvertisementController extends AbstractFOSRestController
      *
      * @param Advertisement $advertisement
      */
-    public function sendToReview(Advertisement $advertisement)
+    public function sendToReview(Advertisement $advertisement): void
     {
         $this->commandBus->dispatch(
             new SendAdvertisementToReviewCommand($advertisement->getId())
@@ -282,7 +270,7 @@ class AdvertisementController extends AbstractFOSRestController
      * @param ParamFetcherInterface $paramFetcher
      * @param Advertisement $advertisement
      */
-    public function sendBack(ParamFetcherInterface $paramFetcher, Advertisement $advertisement)
+    public function sendBack(ParamFetcherInterface $paramFetcher, Advertisement $advertisement): void
     {
         $this->commandBus->dispatch(
             new SendBackAdvertisementCommand($advertisement->getId(), $paramFetcher->get('reason'))
@@ -298,7 +286,7 @@ class AdvertisementController extends AbstractFOSRestController
      *
      * @param Advertisement $advertisement
      */
-    public function publish(Advertisement $advertisement)
+    public function publish(Advertisement $advertisement): void
     {
         $this->commandBus->dispatch(
             new PublishAdvertisementCommand($advertisement->getId())
@@ -314,7 +302,7 @@ class AdvertisementController extends AbstractFOSRestController
      *
      * @param Advertisement $advertisement
      */
-    public function archive(Advertisement $advertisement)
+    public function archive(Advertisement $advertisement): void
     {
         $this->commandBus->dispatch(
             new ArchiveAdvertisementCommand($advertisement->getId())

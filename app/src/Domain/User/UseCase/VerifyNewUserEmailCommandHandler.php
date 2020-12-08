@@ -10,9 +10,6 @@ use App\Domain\User\Repository\UserRepositoryInterface;
 
 class VerifyNewUserEmailCommandHandler implements CommandHandlerInterface
 {
-    /**
-     * @var UserRepositoryInterface
-     */
     private UserRepositoryInterface $repository;
 
     public function __construct(UserRepositoryInterface $repository)
@@ -20,7 +17,7 @@ class VerifyNewUserEmailCommandHandler implements CommandHandlerInterface
         $this->repository = $repository;
     }
 
-    public function __invoke(VerifyNewUserEmailCommand $command)
+    public function __invoke(VerifyNewUserEmailCommand $command): void
     {
         $user = $this->repository->findOrFail($command->getUserId());
         if ($user->getConfirmationToken() !== $command->getToken()) {

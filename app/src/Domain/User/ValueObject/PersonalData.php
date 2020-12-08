@@ -47,34 +47,21 @@ class PersonalData
         $this->biography = $biography;
     }
 
-    /**
-     * @return string
-     */
     public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    /**
-     * @return string
-     */
     public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     * @return PersonalData
-     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -82,9 +69,6 @@ class PersonalData
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getBiography(): ?string
     {
         return $this->biography;

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class EntityExists extends Constraint
 {
-    const ENTITY_NOT_FOUND = '05a3def4-ce5b-44c9-bdcd-5fd520f78fee';
+    public const ENTITY_NOT_FOUND = '05a3def4-ce5b-44c9-bdcd-5fd520f78fee';
 
     protected static $errorNames = [
         self::ENTITY_NOT_FOUND => 'ENTITY_NOT_FOUND',
