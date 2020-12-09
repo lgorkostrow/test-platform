@@ -11,8 +11,8 @@ use App\Domain\Advertisement\State\Advertisement\DraftState;
 use App\Domain\Advertisement\State\Advertisement\OnReviewState;
 use App\Domain\Advertisement\State\Advertisement\PublishedState;
 use App\Domain\Advertisement\ValueObject\AdvertisementDescription;
-use App\Domain\Common\Enum\CurrencyEnum;
-use App\Domain\Common\ValueObject\Price;
+use App\Domain\Currency\Enum\DefaultCurrencyEnum;
+use App\Domain\Currency\ValueObject\Price;
 use App\Domain\User\Entity\User;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -54,7 +54,7 @@ class AdvertisementFixtures extends AbstractFixture implements DependentFixtureI
             $advertisement = new Advertisement(
                 Uuid::uuid4()->toString(),
                 new AdvertisementDescription($this->faker->words(3, true), $this->faker->text),
-                new Price($this->faker->numberBetween(100, 10000), CurrencyEnum::VALID_CHOICES[array_rand(CurrencyEnum::VALID_CHOICES)]),
+                new Price($this->faker->numberBetween(100, 10000), DefaultCurrencyEnum::LIST[array_rand(DefaultCurrencyEnum::LIST)]),
                 $category,
                 $author,
             );

@@ -17,7 +17,7 @@ use App\Domain\Common\Event\RaiseEventsInterface;
 use App\Domain\Common\Event\RaiseEventsTrait;
 use App\Domain\Common\Exception\BusinessException;
 use App\Domain\Common\State\AbstractState;
-use App\Domain\Common\ValueObject\Price;
+use App\Domain\Currency\ValueObject\Price;
 use App\Domain\File\Entity\File;
 use App\Domain\User\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;

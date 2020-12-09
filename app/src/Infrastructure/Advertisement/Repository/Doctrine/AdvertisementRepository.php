@@ -13,6 +13,7 @@ use App\Domain\Advertisement\State\Advertisement\PublishedState;
 use App\Domain\Advertisement\View\AdvertisementDetailedView;
 use App\Domain\Advertisement\View\AttachmentView;
 use App\Domain\Common\Repository\PaginatedQueryResult;
+use App\Domain\Currency\Entity\Currency;
 use App\Infrastructure\Common\Repository\AbstractDoctrineRepository;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -72,6 +73,14 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
             $qb
                 ->andWhere($qb->expr()->like('a.description.title', ':title'))
                 ->setParameter('title', "$title%")
+            ;
+        }
+
+        if (null !== $price = $query->getPrice()) {
+            $qb
+                ->innerJoin(Currency::class, 'currency', Join::WITH, 'currency.ccy = a.price.currency')
+                ->andWhere('(a.price.value * currency.sale) => :price')
+                ->setParameter('price', $price)
             ;
         }
 

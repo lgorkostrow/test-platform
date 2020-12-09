@@ -8,7 +8,7 @@ use App\Domain\Advertisement\Dto\AdvertisementDto;
 use App\Domain\Advertisement\Entity\Advertisement;
 use App\Domain\Advertisement\Repository\CategoryRepositoryInterface;
 use App\Domain\Advertisement\ValueObject\AdvertisementDescription;
-use App\Domain\Common\ValueObject\Price;
+use App\Domain\Currency\ValueObject\Price;
 use App\Domain\User\Repository\UserRepositoryInterface;
 
 class AdvertisementFactory

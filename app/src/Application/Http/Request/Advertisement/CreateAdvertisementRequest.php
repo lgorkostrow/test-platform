@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Application\Http\Request\Advertisement;
 
 use App\Application\Validator\Constraints\EntityExists;
-use App\Domain\Common\Enum\CurrencyEnum;
 use App\Domain\Advertisement\Entity\Category;
+use App\Domain\Currency\Entity\Currency;
 use Symfony\Component\Validator\Constraints as Assert;
 use OpenApi\Annotations as OA;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -45,7 +45,8 @@ class CreateAdvertisementRequest
      *
      * @Assert\Type("string")
      * @Assert\NotBlank
-     * @Assert\Choice(choices=CurrencyEnum::VALID_CHOICES)
+     *
+     * @EntityExists(class=Currency::class)
      */
     public $currency;
 

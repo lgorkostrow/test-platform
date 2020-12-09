@@ -19,7 +19,7 @@ class EntityExistsValidator extends ConstraintValidator
         $this->entityManager = $entityManager;
     }
 
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         if (!$constraint instanceof EntityExists) {
             throw new UnexpectedTypeException($constraint, EntityExists::class);
@@ -54,7 +54,14 @@ class EntityExistsValidator extends ConstraintValidator
             ->setMaxResults(1)
         ;
 
-        foreach (array_merge(['id' => $value], $constraint->params) as $param => $value) {
+        $params = array_merge(
+            [
+                $this->entityManager->getClassMetadata($constraint->class)->getSingleIdentifierColumnName() => $value,
+            ],
+            $constraint->params,
+        );
+
+        foreach ($params as $param => $value) {
             $qb
                 ->andWhere("entity.$param = :$param")
                 ->setParameter($param, $value)

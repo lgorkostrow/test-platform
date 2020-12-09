@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Common\ValueObject;
+namespace App\Domain\Currency\ValueObject;
 
-use App\Domain\Common\Enum\CurrencyEnum;
 use Doctrine\ORM\Mapping as ORM;
-use LogicException;
 
 /**
  * @ORM\Embeddable
@@ -23,16 +21,12 @@ class Price
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=10)
+     * @ORM\Column(type="string", length=3)
      */
     private string $currency;
 
     public function __construct(float $value, string $currency)
     {
-        if (!in_array($currency, CurrencyEnum::VALID_CHOICES, true)) {
-            throw new LogicException('UNDEFINED_CURRENCY');
-        }
-
         $this->value = $value;
         $this->currency = $currency;
     }

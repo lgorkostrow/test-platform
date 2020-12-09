@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Common\Enum;
+namespace App\Domain\Currency\Enum;
 
-class CurrencyEnum
+class DefaultCurrencyEnum
 {
     public const UAH = 'UAH';
     public const USD = 'USD';
     public const EUR = 'EUR';
 
-    public const VALID_CHOICES = [
-        self::UAH,
+    public const BASE_CURRENCY = self::UAH;
+
+    public const LIST = [
         self::USD,
         self::EUR,
     ];

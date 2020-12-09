@@ -93,6 +93,9 @@ services:
         arguments:
             $strategies: !tagged app.strategy.content_storage
 
+    App\Domain\Currency\Manager\ExchangeRatesManager:
+        arguments:
+            $strategies: !tagged app.strategy.exchange_rate_provider
     # strategies
     App\Infrastructure\File\Strategy\Storage\LocalFileStorage:
         arguments:
@@ -100,6 +103,11 @@ services:
         tags:
             - { name: app.strategy.content_storage }
 
+    App\Infrastructure\Currency\Strategy\ExchangeRatesProvider\PBExchangeRatesProvider:
+        arguments:
+            $apiUrl: '%env(PB_EXCHANGE_RATES_PROVIDER_URL)%'
+        tags:
+            - { name: app.strategy.exchange_rate_provider }
     # serializer
     Symfony\Component\Serializer\Normalizer\DateTimeNormalizer:
         tags:
