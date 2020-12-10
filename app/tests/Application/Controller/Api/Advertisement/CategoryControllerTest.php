@@ -24,14 +24,14 @@ class CategoryControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('limit', $responseData);
-        $this->assertArrayHasKey('data', $responseData);
-        $this->assertNotEmpty($responseData['data']);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('limit', $responseData);
+        self::assertArrayHasKey('data', $responseData);
+        self::assertNotEmpty($responseData['data']);
 
         foreach ($responseData['data'] as $item) {
-            $this->assertArrayHasKey('id', $item);
-            $this->assertArrayHasKey('name', $item);
+            self::assertArrayHasKey('id', $item);
+            self::assertArrayHasKey('name', $item);
         }
     }
 }

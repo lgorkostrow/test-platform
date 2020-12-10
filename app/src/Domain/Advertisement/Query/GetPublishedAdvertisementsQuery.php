@@ -12,9 +12,9 @@ class GetPublishedAdvertisementsQuery extends AbstractListQuery
 
     private ?string $title;
 
-    private ?float $price;
+    private ?array $price;
 
-    public function __construct(int $limit, int $offset, string $categoryId, ?string $title, ?float $price = null)
+    public function __construct(int $limit, int $offset, string $categoryId, ?string $title, ?array $price)
     {
         parent::__construct($limit, $offset);
 
@@ -33,7 +33,7 @@ class GetPublishedAdvertisementsQuery extends AbstractListQuery
         return $this->title;
     }
 
-    public function getPrice(): ?float
+    public function getPrice(): ?array
     {
         return $this->price;
     }

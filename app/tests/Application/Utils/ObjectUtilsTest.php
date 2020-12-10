@@ -19,7 +19,7 @@ class ObjectUtilsTest extends TestCase
      */
     public function testIsEntity($data, bool $result)
     {
-        $this->assertEquals($result, ObjectUtils::isEntity($data));
+        self::assertEquals($result, ObjectUtils::isEntity($data));
     }
 
     /**
@@ -37,7 +37,7 @@ class ObjectUtilsTest extends TestCase
 
         $entityId = ObjectUtils::getIdFromEntity($entity);
 
-        $this->assertEquals($id, $entityId);
+        self::assertEquals($id, $entityId);
     }
 
     public function isEntityDataProvider()

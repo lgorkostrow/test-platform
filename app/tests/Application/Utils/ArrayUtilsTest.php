@@ -16,7 +16,7 @@ class ArrayUtilsTest extends TestCase
      */
     public function testIsAssocArray(array $array, bool $result)
     {
-        $this->assertEquals(
+        self::assertEquals(
             $result,
             ArrayUtils::isAssocArray($array)
         );
@@ -29,7 +29,7 @@ class ArrayUtilsTest extends TestCase
      */
     public function testGetFirstStringKeyInAssocArray(array $array, string $result)
     {
-        $this->assertEquals(
+        self::assertEquals(
             $result,
             ArrayUtils::getFirstStringKeyInAssocArray($array)
         );
@@ -44,7 +44,7 @@ class ArrayUtilsTest extends TestCase
      */
     public function testFlatten(bool $useKeys, array $data, array $result)
     {
-        $this->assertEquals(
+        self::assertEquals(
             $result,
             ArrayUtils::flatten($data, $useKeys),
         );

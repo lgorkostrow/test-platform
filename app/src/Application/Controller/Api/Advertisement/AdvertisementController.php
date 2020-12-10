@@ -10,6 +10,7 @@ use App\Application\Http\Annotation\ChoiceQueryParam;
 use App\Application\Http\Request\Advertisement\CreateAdvertisementRequest;
 use App\Application\Service\ValidationService;
 use App\Application\Utils\MessengerUtils;
+use App\Application\Validator\Constraints\PriceFilter;
 use App\Domain\Advertisement\Dto\AdvertisementDetailedViewDto;
 use App\Domain\Advertisement\Entity\Advertisement;
 use App\Domain\Advertisement\Query\GetAdvertisementQuery;
@@ -74,6 +75,14 @@ class AdvertisementController extends AbstractFOSRestController
      * @Rest\QueryParam(name="offset", requirements="\d+", strict=true, default=0)
      * @Rest\QueryParam(name="category", strict=true, allowBlank=false, nullable=false, requirements=@EntityExists(class=Category::class))
      * @Rest\QueryParam(name="title", strict=true, allowBlank=false, nullable=true)
+     * @Rest\QueryParam(
+     *     name="price",
+     *     strict=true,
+     *     allowBlank=false,
+     *     nullable=true,
+     *     description="In UAH|price[min]=500&price[max]=1000",
+     *     requirements=@PriceFilter
+     * )
      *
      * @OA\Response(
      *     response=200,
@@ -96,6 +105,7 @@ class AdvertisementController extends AbstractFOSRestController
             (int)$paramFetcher->get('offset'),
             $paramFetcher->get('category'),
             $paramFetcher->get('title'),
+            $paramFetcher->get('price'),
         ));
 
         return MessengerUtils::getResultFromEnvelope($envelope);

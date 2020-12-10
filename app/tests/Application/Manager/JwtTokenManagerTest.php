@@ -44,9 +44,9 @@ class JwtTokenManagerTest extends AbstractKernelTestCase
 
         $token = $this->jwtManager->create($user);
 
-        $this->assertIsArray($token);
-        $this->assertArrayHasKey('token', $token);
-        $this->assertArrayHasKey('refreshToken', $token);
+        self::assertIsArray($token);
+        self::assertArrayHasKey('token', $token);
+        self::assertArrayHasKey('refreshToken', $token);
     }
 
     /** @test */
@@ -56,7 +56,7 @@ class JwtTokenManagerTest extends AbstractKernelTestCase
 
         $token = $this->jwtManager->encode($user);
 
-        $this->assertIsString($token);
+        self::assertIsString($token);
     }
 
     /** @test */
@@ -67,9 +67,9 @@ class JwtTokenManagerTest extends AbstractKernelTestCase
         $token = $this->jwtManager->encode($user);
         $decoded = $this->jwtManager->decode($token);
 
-        $this->assertIsArray($decoded);
-        $this->assertArrayHasKey('username', $decoded);
-        $this->assertArrayHasKey('exp', $decoded);
-        $this->assertEquals($decoded['username'], $user->getEmail());
+        self::assertIsArray($decoded);
+        self::assertArrayHasKey('username', $decoded);
+        self::assertArrayHasKey('exp', $decoded);
+        self::assertEquals($decoded['username'], $user->getEmail());
     }
 }

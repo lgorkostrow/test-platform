@@ -35,7 +35,7 @@ class EntityExistsValidatorTest extends AbstractKernelTestCase
             new EntityExists(['class' => User::class])
         );
 
-        $this->assertEquals(0, $errors->count());
+        self::assertEquals(0, $errors->count());
     }
 
     /** @test */
@@ -48,7 +48,7 @@ class EntityExistsValidatorTest extends AbstractKernelTestCase
             new EntityExists(['class' => User::class])
         );
 
-        $this->assertEquals(0, $errors->count());
+        self::assertEquals(0, $errors->count());
     }
 
     /** @test */
@@ -59,8 +59,8 @@ class EntityExistsValidatorTest extends AbstractKernelTestCase
             new EntityExists(['class' => User::class])
         );
 
-        $this->assertGreaterThan(0, $errors->count());
-        $this->assertEquals(EntityExists::ENTITY_NOT_FOUND, $errors->get(0)->getCode());
+        self::assertGreaterThan(0, $errors->count());
+        self::assertEquals(EntityExists::ENTITY_NOT_FOUND, $errors->get(0)->getCode());
     }
 
     /** @test */
@@ -78,12 +78,12 @@ class EntityExistsValidatorTest extends AbstractKernelTestCase
 
         $errors = $this->validator->validate($verifiedUser->getId(), $constraint);
 
-        $this->assertEquals(0, $errors->count());
+        self::assertEquals(0, $errors->count());
 
         $errors = $this->validator->validate($unverifiedUser->getId(), $constraint);
 
-        $this->assertGreaterThan(0, $errors->count());
-        $this->assertEquals(EntityExists::ENTITY_NOT_FOUND, $errors->get(0)->getCode());
+        self::assertGreaterThan(0, $errors->count());
+        self::assertEquals(EntityExists::ENTITY_NOT_FOUND, $errors->get(0)->getCode());
     }
 
     /** @test */
@@ -101,11 +101,11 @@ class EntityExistsValidatorTest extends AbstractKernelTestCase
 
         $errors = $this->validator->validate($verifiedUser->getId(), $constraint);
 
-        $this->assertEquals(0, $errors->count());
+        self::assertEquals(0, $errors->count());
 
         $errors = $this->validator->validate($unverifiedUser->getId(), $constraint);
 
-        $this->assertGreaterThan(0, $errors->count());
-        $this->assertEquals(EntityExists::ENTITY_NOT_FOUND, $errors->get(0)->getCode());
+        self::assertGreaterThan(0, $errors->count());
+        self::assertEquals(EntityExists::ENTITY_NOT_FOUND, $errors->get(0)->getCode());
     }
 }

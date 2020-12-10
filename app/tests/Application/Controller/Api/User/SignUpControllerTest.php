@@ -27,19 +27,19 @@ class SignUpControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('id', $responseData);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('id', $responseData);
 
         /** @var User $user */
         $user = $this->entityManager->getRepository(User::class)->find($responseData['id']);
         $personalData = $this->getUserPersonalData($user);
 
-        $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals($user->getEmail(), $data['email']);
-        $this->assertEquals($personalData->getFirstName(), $data['firstName']);
-        $this->assertEquals($personalData->getLastName(), $data['lastName']);
-        $this->assertEquals($personalData->getBiography(), $data['biography']);
-        $this->assertFalse($user->isManagerOrAdmin());
+        self::assertInstanceOf(User::class, $user);
+        self::assertEquals($user->getEmail(), $data['email']);
+        self::assertEquals($personalData->getFirstName(), $data['firstName']);
+        self::assertEquals($personalData->getLastName(), $data['lastName']);
+        self::assertEquals($personalData->getBiography(), $data['biography']);
+        self::assertFalse($user->isManagerOrAdmin());
     }
 
     /**
@@ -56,12 +56,12 @@ class SignUpControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(422, $response->getStatusCode());
-        $this->assertArrayHasKey('errors', $responseData);
+        self::assertEquals(422, $response->getStatusCode());
+        self::assertArrayHasKey('errors', $responseData);
 
         foreach ($errors as $field => $error) {
-            $this->assertArrayHasKey($field, $responseData['errors']);
-            $this->assertContains($error, $responseData['errors'][$field]);
+            self::assertArrayHasKey($field, $responseData['errors']);
+            self::assertContains($error, $responseData['errors'][$field]);
         }
     }
 
@@ -81,10 +81,10 @@ class SignUpControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(422, $response->getStatusCode());
-        $this->assertArrayHasKey('errors', $responseData);
-        $this->assertArrayHasKey('email', $responseData['errors']);
-        $this->assertEquals(['NOT_UNIQUE_ERROR'], $responseData['errors']['email']);
+        self::assertEquals(422, $response->getStatusCode());
+        self::assertArrayHasKey('errors', $responseData);
+        self::assertArrayHasKey('email', $responseData['errors']);
+        self::assertEquals(['NOT_UNIQUE_ERROR'], $responseData['errors']['email']);
     }
 
     /** @test */
@@ -92,17 +92,17 @@ class SignUpControllerTest extends AbstractRestTestCase
     {
         $user = $this->findRandomUser(false);
 
-        $this->assertFalse($user->isEmailConfirmed());
+        self::assertFalse($user->isEmailConfirmed());
 
         $response = $this->sendPost(sprintf('/api/sign-up/verify/email/%s', $user->getConfirmationToken()), []);
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('token', $responseData);
-        $this->assertArrayHasKey('refreshToken', $responseData);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('token', $responseData);
+        self::assertArrayHasKey('refreshToken', $responseData);
 
-        $this->assertTrue($user->isEmailConfirmed());
+        self::assertTrue($user->isEmailConfirmed());
     }
 
     public function invalidUserDataProvider()

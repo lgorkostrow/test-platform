@@ -44,13 +44,13 @@ class UserControllerTest extends AbstractRestTestCase
 
 
 
-        $this->assertEquals(204, $response->getStatusCode());
+        self::assertEquals(204, $response->getStatusCode());
 
-        $this->assertEquals($data['firstName'], $personalData->getFirstName());
-        $this->assertEquals($data['lastName'], $personalData->getLastName());
-        $this->assertEquals($data['biography'], $personalData->getBiography());
-        $this->assertEmpty($newEmail);
-        $this->assertEmpty($token);
+        self::assertEquals($data['firstName'], $personalData->getFirstName());
+        self::assertEquals($data['lastName'], $personalData->getLastName());
+        self::assertEquals($data['biography'], $personalData->getBiography());
+        self::assertEmpty($newEmail);
+        self::assertEmpty($token);
     }
 
     /** @test */
@@ -76,14 +76,14 @@ class UserControllerTest extends AbstractRestTestCase
         $newEmail = $this->getUserField($user, 'newEmail');
         $token = $this->getUserField($user, 'confirmationToken');
 
-        $this->assertEquals(204, $response->getStatusCode());
+        self::assertEquals(204, $response->getStatusCode());
 
-        $this->assertEquals($data['firstName'], $personalData->getFirstName());
-        $this->assertEquals($data['lastName'], $personalData->getLastName());
-        $this->assertEquals($data['biography'], $personalData->getBiography());
-        $this->assertNotEquals($data['email'], $personalData->getEmail());
-        $this->assertEquals($data['email'], $newEmail);
-        $this->assertNotEmpty($token);
+        self::assertEquals($data['firstName'], $personalData->getFirstName());
+        self::assertEquals($data['lastName'], $personalData->getLastName());
+        self::assertEquals($data['biography'], $personalData->getBiography());
+        self::assertNotEquals($data['email'], $personalData->getEmail());
+        self::assertEquals($data['email'], $newEmail);
+        self::assertNotEmpty($token);
     }
 
     /**
@@ -107,12 +107,12 @@ class UserControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(422, $response->getStatusCode());
-        $this->assertArrayHasKey('errors', $responseData);
+        self::assertEquals(422, $response->getStatusCode());
+        self::assertArrayHasKey('errors', $responseData);
 
         foreach ($errors as $field => $error) {
-            $this->assertArrayHasKey($field, $responseData['errors']);
-            $this->assertContains($error, $responseData['errors'][$field]);
+            self::assertArrayHasKey($field, $responseData['errors']);
+            self::assertContains($error, $responseData['errors'][$field]);
         }
     }
 
@@ -139,14 +139,14 @@ class UserControllerTest extends AbstractRestTestCase
         $newEmail = $this->getUserField($user, 'newEmail');
         $token = $this->getUserField($user, 'confirmationToken');
 
-        $this->assertEquals(204, $response->getStatusCode());
+        self::assertEquals(204, $response->getStatusCode());
 
-        $this->assertEquals($data['firstName'], $personalData->getFirstName());
-        $this->assertEquals($data['lastName'], $personalData->getLastName());
-        $this->assertEquals($data['biography'], $personalData->getBiography());
-        $this->assertNotEquals($data['email'], $personalData->getEmail());
-        $this->assertEquals($data['email'], $newEmail);
-        $this->assertNotEmpty($token);
+        self::assertEquals($data['firstName'], $personalData->getFirstName());
+        self::assertEquals($data['lastName'], $personalData->getLastName());
+        self::assertEquals($data['biography'], $personalData->getBiography());
+        self::assertNotEquals($data['email'], $personalData->getEmail());
+        self::assertEquals($data['email'], $newEmail);
+        self::assertNotEmpty($token);
 
         $response = $this->sendPost(
             '/api/user/email/verify',
@@ -157,9 +157,9 @@ class UserControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('token', $responseData);
-        $this->assertArrayHasKey('refreshToken', $responseData);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('token', $responseData);
+        self::assertArrayHasKey('refreshToken', $responseData);
 
         $this->entityManager->clear();
 
@@ -168,9 +168,9 @@ class UserControllerTest extends AbstractRestTestCase
         $newEmail = $this->getUserField($user, 'newEmail');
         $token = $this->getUserField($user, 'confirmationToken');
 
-        $this->assertEquals($data['email'], $personalData->getEmail());
-        $this->assertEmpty($newEmail);
-        $this->assertEmpty($token);
+        self::assertEquals($data['email'], $personalData->getEmail());
+        self::assertEmpty($newEmail);
+        self::assertEmpty($token);
     }
 
     public function invalidPersonalDataProvider()

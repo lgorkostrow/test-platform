@@ -22,7 +22,7 @@ class AdvertisementControllerTest extends AbstractRestTestCase
     use FileTrait;
 
     /** @test */
-    public function shouldReturnPublishedAdvertisements()
+    public function shouldReturnPublishedAdvertisements(): void
     {
         $user = $this->findRandomUser();
         $category = $this->findRandomCategory();
@@ -35,24 +35,24 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('limit', $responseData);
-        $this->assertArrayHasKey('data', $responseData);
-        $this->assertNotEmpty($responseData['data']);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('limit', $responseData);
+        self::assertArrayHasKey('data', $responseData);
+        self::assertNotEmpty($responseData['data']);
 
         foreach ($responseData['data'] as $item) {
-            $this->assertArrayHasKey('id', $item);
-            $this->assertArrayHasKey('title', $item);
-            $this->assertArrayHasKey('state', $item);
-            $this->assertArrayHasKey('category', $item);
-            $this->assertArrayHasKey('price', $item);
+            self::assertArrayHasKey('id', $item);
+            self::assertArrayHasKey('title', $item);
+            self::assertArrayHasKey('state', $item);
+            self::assertArrayHasKey('category', $item);
+            self::assertArrayHasKey('price', $item);
 
-            $this->assertEquals('published', $item['state']);
+            self::assertEquals('published', $item['state']);
         }
     }
 
     /** @test */
-    public function shouldReturnValidationErrorsOnPublishedAdvertisementsList()
+    public function shouldReturnValidationErrorsOnPublishedAdvertisementsList(): void
     {
         $user = $this->findRandomUser();
 
@@ -64,10 +64,10 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertArrayHasKey('errors', $responseData);
-        $this->assertArrayHasKey('category', $responseData['errors']);
-        $this->assertContains('ENTITY_NOT_FOUND', $responseData['errors']['category']);
+        self::assertEquals(400, $response->getStatusCode());
+        self::assertArrayHasKey('errors', $responseData);
+        self::assertArrayHasKey('category', $responseData['errors']);
+        self::assertContains('ENTITY_NOT_FOUND', $responseData['errors']['category']);
 
         $response = $this->sendGet(
             sprintf('/api/advertisement?%s', http_build_query(['category' => ''])),
@@ -77,10 +77,40 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertArrayHasKey('errors', $responseData);
-        $this->assertArrayHasKey('category', $responseData['errors']);
-        $this->assertContains('IS_BLANK_ERROR', $responseData['errors']['category']);
+        self::assertEquals(400, $response->getStatusCode());
+        self::assertArrayHasKey('errors', $responseData);
+        self::assertArrayHasKey('category', $responseData['errors']);
+        self::assertContains('IS_BLANK_ERROR', $responseData['errors']['category']);
+    }
+
+    /** @test */
+    public function shouldFilterPublishedAdvertisementsByPrice(): void
+    {
+        $user = $this->findRandomUser();
+        $category = $this->findRandomCategory();
+
+        $response = $this->sendGet(
+            sprintf('/api/advertisement?%s', http_build_query([
+                'category' => $category->getId(),
+                'price' => ['min' => 5000, 'max' => 7000],
+            ])),
+            [],
+            $this->logIn($user->getEmail())
+        );
+
+        $responseData = json_decode($response->getContent(), true);
+
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertNotEmpty($responseData['data']);
+
+        foreach ($responseData['data'] as $item) {
+            self::assertArrayHasKey('price', $item);
+
+            self::assertThat($item['price']['price'], self::logicalAnd(
+                self::greaterThanOrEqual(5000),
+                self::lessThanOrEqual(7000),
+            ));
+        }
     }
 
     /**
@@ -91,7 +121,7 @@ class AdvertisementControllerTest extends AbstractRestTestCase
      * @param string $limit
      * @param string|null $state
      */
-    public function shouldReturnMyAdvertisements(string $limit, ?string $state)
+    public function shouldReturnMyAdvertisements(string $limit, ?string $state): void
     {
         $user = $this->findRandomUser();
 
@@ -106,21 +136,21 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('limit', $responseData);
-        $this->assertEquals($responseData['limit'], $limit);
-        $this->assertArrayHasKey('data', $responseData);
-        $this->assertNotEmpty($responseData['data']);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('limit', $responseData);
+        self::assertEquals($responseData['limit'], $limit);
+        self::assertArrayHasKey('data', $responseData);
+        self::assertNotEmpty($responseData['data']);
 
         if ($state) {
             foreach ($responseData['data'] as $item) {
-                $this->assertArrayHasKey('id', $item);
-                $this->assertArrayHasKey('title', $item);
-                $this->assertArrayHasKey('state', $item);
-                $this->assertArrayHasKey('category', $item);
-                $this->assertArrayHasKey('price', $item);
+                self::assertArrayHasKey('id', $item);
+                self::assertArrayHasKey('title', $item);
+                self::assertArrayHasKey('state', $item);
+                self::assertArrayHasKey('category', $item);
+                self::assertArrayHasKey('price', $item);
 
-                $this->assertEquals($state, $item['state']);
+                self::assertEquals($state, $item['state']);
             }
         }
 
@@ -138,28 +168,28 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('limit', $responseData);
-        $this->assertEquals($responseData['limit'], $limit);
-        $this->assertArrayHasKey('data', $responseData);
-        $this->assertNotEmpty($responseData['data']);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('limit', $responseData);
+        self::assertEquals($responseData['limit'], $limit);
+        self::assertArrayHasKey('data', $responseData);
+        self::assertNotEmpty($responseData['data']);
 
         if ($state) {
             foreach ($responseData['data'] as $item) {
-                $this->assertArrayHasKey('id', $item);
-                $this->assertArrayHasKey('title', $item);
-                $this->assertArrayHasKey('state', $item);
-                $this->assertArrayHasKey('category', $item);
-                $this->assertArrayHasKey('price', $item);
+                self::assertArrayHasKey('id', $item);
+                self::assertArrayHasKey('title', $item);
+                self::assertArrayHasKey('state', $item);
+                self::assertArrayHasKey('category', $item);
+                self::assertArrayHasKey('price', $item);
 
-                $this->assertEquals($state, $item['state']);
-                $this->assertEquals($category->getId(), $item['category']['id']);
+                self::assertEquals($state, $item['state']);
+                self::assertEquals($category->getId(), $item['category']['id']);
             }
         }
     }
 
     /** @test */
-    public function shouldReturnValidationErrorsOnMyAdvertisementsList()
+    public function shouldReturnValidationErrorsOnMyAdvertisementsList(): void
     {
         $user = $this->findRandomUser();
 
@@ -173,10 +203,10 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertArrayHasKey('errors', $responseData);
-        $this->assertArrayHasKey('category', $responseData['errors']);
-        $this->assertContains('ENTITY_NOT_FOUND', $responseData['errors']['category']);
+        self::assertEquals(400, $response->getStatusCode());
+        self::assertArrayHasKey('errors', $responseData);
+        self::assertArrayHasKey('category', $responseData['errors']);
+        self::assertContains('ENTITY_NOT_FOUND', $responseData['errors']['category']);
 
         $response = $this->sendGet(
             sprintf('/api/advertisement/my?%s', http_build_query([
@@ -188,14 +218,14 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertArrayHasKey('errors', $responseData);
-        $this->assertArrayHasKey('state', $responseData['errors']);
-        $this->assertContains('NO_SUCH_CHOICE_ERROR', $responseData['errors']['state']);
+        self::assertEquals(400, $response->getStatusCode());
+        self::assertArrayHasKey('errors', $responseData);
+        self::assertArrayHasKey('state', $responseData['errors']);
+        self::assertContains('NO_SUCH_CHOICE_ERROR', $responseData['errors']['state']);
     }
 
     /** @test */
-    public function shouldReturnReadyForReviewAdvertisements()
+    public function shouldReturnReadyForReviewAdvertisements(): void
     {
         $user = $this->findAdmin();
         $category = $this->findRandomCategory();
@@ -208,19 +238,19 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('limit', $responseData);
-        $this->assertArrayHasKey('data', $responseData);
-        $this->assertNotEmpty($responseData['data']);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('limit', $responseData);
+        self::assertArrayHasKey('data', $responseData);
+        self::assertNotEmpty($responseData['data']);
 
         foreach ($responseData['data'] as $item) {
-            $this->assertArrayHasKey('id', $item);
-            $this->assertArrayHasKey('title', $item);
-            $this->assertArrayHasKey('state', $item);
-            $this->assertArrayHasKey('category', $item);
-            $this->assertArrayHasKey('price', $item);
+            self::assertArrayHasKey('id', $item);
+            self::assertArrayHasKey('title', $item);
+            self::assertArrayHasKey('state', $item);
+            self::assertArrayHasKey('category', $item);
+            self::assertArrayHasKey('price', $item);
 
-            $this->assertEquals('on_review', $item['state']);
+            self::assertEquals('on_review', $item['state']);
         }
 
         $user = $this->findManager();
@@ -233,24 +263,24 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('limit', $responseData);
-        $this->assertArrayHasKey('data', $responseData);
-        $this->assertNotEmpty($responseData['data']);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('limit', $responseData);
+        self::assertArrayHasKey('data', $responseData);
+        self::assertNotEmpty($responseData['data']);
 
         foreach ($responseData['data'] as $item) {
-            $this->assertArrayHasKey('id', $item);
-            $this->assertArrayHasKey('title', $item);
-            $this->assertArrayHasKey('state', $item);
-            $this->assertArrayHasKey('category', $item);
-            $this->assertArrayHasKey('price', $item);
+            self::assertArrayHasKey('id', $item);
+            self::assertArrayHasKey('title', $item);
+            self::assertArrayHasKey('state', $item);
+            self::assertArrayHasKey('category', $item);
+            self::assertArrayHasKey('price', $item);
 
-            $this->assertEquals('on_review', $item['state']);
+            self::assertEquals('on_review', $item['state']);
         }
     }
 
     /** @test */
-    public function shouldDenyAccessForUserOnViewingReadyForReviewAdvertisements()
+    public function shouldDenyAccessForUserOnViewingReadyForReviewAdvertisements(): void
     {
         $user = $this->findRandomUser();
 
@@ -260,11 +290,11 @@ class AdvertisementControllerTest extends AbstractRestTestCase
             $this->logIn($user->getEmail())
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
+        self::assertEquals(403, $response->getStatusCode());
     }
 
     /** @test */
-    public function shouldReturnAdvertisementDetailedView()
+    public function shouldReturnAdvertisementDetailedView(): void
     {
         $advertisement = $this->findAdvertisementByState(new PublishedState());
         $user = $this->getAdvertisementField($advertisement, 'author');
@@ -277,18 +307,18 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('id', $responseData);
-        $this->assertArrayHasKey('title', $responseData);
-        $this->assertArrayHasKey('description', $responseData);
-        $this->assertArrayHasKey('price', $responseData);
-        $this->assertArrayHasKey('author', $responseData);
-        $this->assertArrayHasKey('createdAt', $responseData);
-        $this->assertArrayHasKey('attachments', $responseData);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('id', $responseData);
+        self::assertArrayHasKey('title', $responseData);
+        self::assertArrayHasKey('description', $responseData);
+        self::assertArrayHasKey('price', $responseData);
+        self::assertArrayHasKey('author', $responseData);
+        self::assertArrayHasKey('createdAt', $responseData);
+        self::assertArrayHasKey('attachments', $responseData);
     }
 
     /** @test */
-    public function shouldCreateAdvertisementWithAttachment()
+    public function shouldCreateAdvertisementWithAttachment(): void
     {
         $user = $this->findRandomUser();
         $category = $this->findRandomCategory();
@@ -321,19 +351,19 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertArrayHasKey('id', $responseData);
+        self::assertEquals(200, $response->getStatusCode());
+        self::assertArrayHasKey('id', $responseData);
 
         /** @var Advertisement $advertisement */
         $advertisement = $this->entityManager->getRepository(Advertisement::class)->find($responseData['id']);
         $description = $this->getAdvertisementField($advertisement, 'description');
         $attachments = $this->getAdvertisementField($advertisement, 'attachments');
 
-        $this->assertTrue($advertisement->isDraft());
-        $this->assertTrue($advertisement->isAuthor($user));
-        $this->assertEquals($description->getTitle(), $data['title']);
-        $this->assertEquals($description->getDescription(), $data['description']);
-        $this->assertCount(1, $attachments);
+        self::assertTrue($advertisement->isDraft());
+        self::assertTrue($advertisement->isAuthor($user));
+        self::assertEquals($description->getTitle(), $data['title']);
+        self::assertEquals($description->getDescription(), $data['description']);
+        self::assertCount(1, $attachments);
     }
 
     /**
@@ -345,7 +375,7 @@ class AdvertisementControllerTest extends AbstractRestTestCase
      * @param array $files
      * @param array $errors
      */
-    public function shouldReturnValidationErrors(array $data, array $files, array $errors)
+    public function shouldReturnValidationErrors(array $data, array $files, array $errors): void
     {
         $user = $this->findRandomUser();
 
@@ -361,12 +391,12 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(422, $response->getStatusCode());
-        $this->assertArrayHasKey('errors', $responseData);
+        self::assertEquals(422, $response->getStatusCode());
+        self::assertArrayHasKey('errors', $responseData);
 
         foreach ($errors as $field => $error) {
-            $this->assertArrayHasKey($field, $responseData['errors']);
-            $this->assertContains($error, $responseData['errors'][$field]);
+            self::assertArrayHasKey($field, $responseData['errors']);
+            self::assertContains($error, $responseData['errors'][$field]);
         }
     }
 
@@ -376,7 +406,7 @@ class AdvertisementControllerTest extends AbstractRestTestCase
         $advertisement = $this->findAdvertisementByState(new DraftState());
         $user = $this->getAdvertisementAuthor($advertisement);
 
-        $this->assertTrue($advertisement->isDraft());
+        self::assertTrue($advertisement->isDraft());
 
         $response = $this->sendPost(
             sprintf('/api/advertisement/%s/send-to-review', $advertisement->getId()),
@@ -385,19 +415,19 @@ class AdvertisementControllerTest extends AbstractRestTestCase
             $this->logIn($user->getEmail())
         );
 
-        $this->assertEquals(204, $response->getStatusCode());
-        $this->assertTrue($advertisement->isOnReview());
+        self::assertEquals(204, $response->getStatusCode());
+        self::assertTrue($advertisement->isOnReview());
     }
 
     /** @test */
-    public function shouldDenyAccessOnSendingAdvertisementToReview()
+    public function shouldDenyAccessOnSendingAdvertisementToReview(): void
     {
         $advertisement = $this->findAdvertisementByState(new DraftState());
         $user = $this->findUserExcept(
             $this->getAdvertisementAuthor($advertisement)
         );
 
-        $this->assertTrue($advertisement->isDraft());
+        self::assertTrue($advertisement->isDraft());
 
         $response = $this->sendPost(
             sprintf('/api/advertisement/%s/send-to-review', $advertisement->getId()),
@@ -406,17 +436,17 @@ class AdvertisementControllerTest extends AbstractRestTestCase
             $this->logIn($user->getEmail())
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
-        $this->assertTrue($advertisement->isDraft());
+        self::assertEquals(403, $response->getStatusCode());
+        self::assertTrue($advertisement->isDraft());
     }
 
     /** @test */
-    public function shouldPublishAdvertisement()
+    public function shouldPublishAdvertisement(): void
     {
         $advertisement = $this->findAdvertisementByState(new OnReviewState());
         $user = $this->findAdmin();
 
-        $this->assertTrue($advertisement->isOnReview());
+        self::assertTrue($advertisement->isOnReview());
 
         $response = $this->sendPost(
             sprintf('/api/advertisement/%s/publish', $advertisement->getId()),
@@ -425,17 +455,17 @@ class AdvertisementControllerTest extends AbstractRestTestCase
             $this->logIn($user->getEmail())
         );
 
-        $this->assertEquals(204, $response->getStatusCode());
-        $this->assertTrue($advertisement->isPublished());
+        self::assertEquals(204, $response->getStatusCode());
+        self::assertTrue($advertisement->isPublished());
     }
 
     /** @test */
-    public function shouldDenyAccessOnAdvertisementPublishing()
+    public function shouldDenyAccessOnAdvertisementPublishing(): void
     {
         $advertisement = $this->findAdvertisementByState(new OnReviewState());
         $user = $this->getAdvertisementAuthor($advertisement);
 
-        $this->assertTrue($advertisement->isOnReview());
+        self::assertTrue($advertisement->isOnReview());
 
         $response = $this->sendPost(
             sprintf('/api/advertisement/%s/publish', $advertisement->getId()),
@@ -444,17 +474,17 @@ class AdvertisementControllerTest extends AbstractRestTestCase
             $this->logIn($user->getEmail())
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
-        $this->assertTrue($advertisement->isOnReview());
+        self::assertEquals(403, $response->getStatusCode());
+        self::assertTrue($advertisement->isOnReview());
     }
 
     /** @test */
-    public function shouldSendBackAdvertisement()
+    public function shouldSendBackAdvertisement(): void
     {
         $advertisement = $this->findAdvertisementByState(new OnReviewState());
         $user = $this->findAdmin();
 
-        $this->assertTrue($advertisement->isOnReview());
+        self::assertTrue($advertisement->isOnReview());
 
         $response = $this->sendPost(
             sprintf('/api/advertisement/%s/send-back', $advertisement->getId()),
@@ -465,17 +495,17 @@ class AdvertisementControllerTest extends AbstractRestTestCase
             $this->logIn($user->getEmail())
         );
 
-        $this->assertEquals(204, $response->getStatusCode());
-        $this->assertTrue($advertisement->isDraft());
+        self::assertEquals(204, $response->getStatusCode());
+        self::assertTrue($advertisement->isDraft());
     }
 
     /** @test */
-    public function shouldDenyAccessOnAdvertisementSendingBack()
+    public function shouldDenyAccessOnAdvertisementSendingBack(): void
     {
         $advertisement = $this->findAdvertisementByState(new OnReviewState());
         $user = $this->getAdvertisementField($advertisement, 'author');
 
-        $this->assertTrue($advertisement->isOnReview());
+        self::assertTrue($advertisement->isOnReview());
 
         $response = $this->sendPost(
             sprintf('/api/advertisement/%s/send-back', $advertisement->getId()),
@@ -486,17 +516,17 @@ class AdvertisementControllerTest extends AbstractRestTestCase
             $this->logIn($user->getEmail())
         );
 
-        $this->assertEquals(403, $response->getStatusCode());
-        $this->assertTrue($advertisement->isOnReview());
+        self::assertEquals(403, $response->getStatusCode());
+        self::assertTrue($advertisement->isOnReview());
     }
 
     /** @test */
-    public function shouldReturnValidationErrorsOnAdvertisementSendingBack()
+    public function shouldReturnValidationErrorsOnAdvertisementSendingBack(): void
     {
         $advertisement = $this->findAdvertisementByState(new OnReviewState());
         $user = $this->findAdmin();
 
-        $this->assertTrue($advertisement->isOnReview());
+        self::assertTrue($advertisement->isOnReview());
 
         $response = $this->sendPost(
             sprintf('/api/advertisement/%s/send-back', $advertisement->getId()),
@@ -509,20 +539,20 @@ class AdvertisementControllerTest extends AbstractRestTestCase
 
         $responseData = json_decode($response->getContent(), true);
 
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertTrue($advertisement->isOnReview());
-        $this->assertArrayHasKey('errors', $responseData);
-        $this->assertArrayHasKey('reason', $responseData['errors']);
-        $this->assertContains('IS_BLANK_ERROR', $responseData['errors']['reason']);
+        self::assertEquals(400, $response->getStatusCode());
+        self::assertTrue($advertisement->isOnReview());
+        self::assertArrayHasKey('errors', $responseData);
+        self::assertArrayHasKey('reason', $responseData['errors']);
+        self::assertContains('IS_BLANK_ERROR', $responseData['errors']['reason']);
     }
 
     /** @test */
-    public function shouldArchiveAdvertisement()
+    public function shouldArchiveAdvertisement(): void
     {
         $advertisement = $this->findAdvertisementByState(new PublishedState());
         $user = $this->getAdvertisementAuthor($advertisement);
 
-        $this->assertTrue($advertisement->isPublished());
+        self::assertTrue($advertisement->isPublished());
 
         $response = $this->sendPost(
             sprintf('/api/advertisement/%s/archive', $advertisement->getId()),
@@ -531,11 +561,11 @@ class AdvertisementControllerTest extends AbstractRestTestCase
             $this->logIn($user->getEmail())
         );
 
-        $this->assertEquals(204, $response->getStatusCode());
-        $this->assertTrue($advertisement->isArchived());
+        self::assertEquals(204, $response->getStatusCode());
+        self::assertTrue($advertisement->isArchived());
     }
 
-    public function invalidAdvertisementDataProvider()
+    public function invalidAdvertisementDataProvider(): array
     {
         return [
             [

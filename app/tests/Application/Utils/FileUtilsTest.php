@@ -18,7 +18,7 @@ class FileUtilsTest extends AbstractKernelTestCase
      */
     public function testGetRelativePath(string $publicDir, string $path, string $result)
     {
-        $this->assertEquals($result, FileUtils::getRelativePath($publicDir, $path));
+        self::assertEquals($result, FileUtils::getRelativePath($publicDir, $path));
     }
 
     public function getRelativePathDataProvider()

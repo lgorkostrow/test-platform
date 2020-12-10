@@ -62,6 +62,12 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
     {
         $qb = $this->buildListQueryBuilder()
             ->innerJoin('a.category', 'category', Join::WITH, 'category.id = :categoryId')
+            ->innerJoin(
+                Currency::class,
+                'currency',
+                Join::WITH,
+                'currency.ccy = a.price.currency'
+            )
             ->where('a.state = :publishedState')
             ->setParameters([
                 'categoryId' => $query->getCategoryId(),
@@ -76,11 +82,17 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
             ;
         }
 
-        if (null !== $price = $query->getPrice()) {
+        if (isset($query->getPrice()['min'])) {
             $qb
-                ->innerJoin(Currency::class, 'currency', Join::WITH, 'currency.ccy = a.price.currency')
-                ->andWhere('(a.price.value * currency.sale) => :price')
-                ->setParameter('price', $price)
+                ->andWhere('(a.price.value * currency.sale) >= :minPrice')
+                ->setParameter('minPrice', $query->getPrice()['min'])
+            ;
+        }
+
+        if (isset($query->getPrice()['max'])) {
+            $qb
+                ->andWhere('(a.price.value * currency.sale) <= :maxPrice')
+                ->setParameter('maxPrice', $query->getPrice()['max'])
             ;
         }
 
