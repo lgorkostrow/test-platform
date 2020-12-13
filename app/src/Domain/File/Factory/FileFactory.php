@@ -11,6 +11,7 @@ class FileFactory
 {
     public function create(
         string $id,
+        string $storageType,
         string $path,
         string $originalFileName,
         float $size,
@@ -18,6 +19,7 @@ class FileFactory
     ): File {
         return new File(
             $id,
+            $storageType,
             $path,
             new MetaData($originalFileName, $size / 1000, $mimeType),
         );

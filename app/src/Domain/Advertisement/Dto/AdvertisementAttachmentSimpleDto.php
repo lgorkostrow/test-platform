@@ -12,18 +12,21 @@ class AdvertisementAttachmentSimpleDto
 
     private bool $featured;
 
+    private string $storage;
+
     private string $path;
 
-    public function __construct(string $id, bool $featured, string $path)
+    public function __construct(string $id, bool $featured, string $storage, string $path)
     {
         $this->id = $id;
         $this->featured = $featured;
+        $this->storage = $storage;
         $this->path = $path;
     }
 
     public static function createFromView(AttachmentView $view): self
     {
-        return new self($view->getId(), $view->isFeatured(), $view->getPath());
+        return new self($view->getId(), $view->isFeatured(), $view->getStorage(), $view->getPath());
     }
 
     public function getId(): string
@@ -34,6 +37,11 @@ class AdvertisementAttachmentSimpleDto
     public function isFeatured(): bool
     {
         return $this->featured;
+    }
+
+    public function getStorage(): string
+    {
+        return $this->storage;
     }
 
     public function getPath(): string

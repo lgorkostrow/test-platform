@@ -19,7 +19,7 @@ class AdvertisementListItemDto
 
     private PriceDto $price;
 
-    private ?string $featuredImage;
+    private ?AdvertisementAttachmentSimpleDto $featuredImage;
 
     public function __construct(
         string $id,
@@ -27,7 +27,7 @@ class AdvertisementListItemDto
         AbstractState $state,
         CategoryListItemDto $category,
         PriceDto $price,
-        ?string $featuredImage
+        ?AdvertisementAttachmentSimpleDto $featuredImage
     ) {
         $this->id = $id;
         $this->title = $title;
@@ -39,13 +39,17 @@ class AdvertisementListItemDto
 
     public static function createFromAdvertisementListItemView(AdvertisementListItemView $view): self
     {
+        $featuredImage = $view->getFileId()
+            ? new AdvertisementAttachmentSimpleDto($view->getFileId(), true, $view->getFileStorage(), $view->getFeaturedImage())
+            : null;
+
         return new self(
             $view->getId(),
             $view->getTitle(),
             $view->getState(),
             new CategoryListItemDto($view->getCategoryId(), $view->getCategoryName()),
             new PriceDto($view->getPrice(), $view->getCurrency()),
-            $view->getFeaturedImage(),
+            $featuredImage,
         );
     }
 
@@ -74,7 +78,7 @@ class AdvertisementListItemDto
         return $this->price;
     }
 
-    public function getFeaturedImage(): ?string
+    public function getFeaturedImage(): ?AdvertisementAttachmentSimpleDto
     {
         return $this->featuredImage;
     }

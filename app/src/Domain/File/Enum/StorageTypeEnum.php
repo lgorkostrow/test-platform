@@ -7,4 +7,5 @@ namespace App\Domain\File\Enum;
 class StorageTypeEnum
 {
     public const LOCAL = 'local';
+    public const S3 = 's3';
 }

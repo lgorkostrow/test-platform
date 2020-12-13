@@ -26,6 +26,11 @@ class FileManager
         $this->factory = $factory;
     }
 
+    public function buildFullPath(string $storage, string $path): string
+    {
+        return $this->getStorage($storage)->buildFullPath($path);
+    }
+
     public function store(FileDto $dto): File
     {
         $storage = $this->getStorage($dto->getStorageType());
@@ -33,6 +38,7 @@ class FileManager
 
         return $this->factory->create(
             $dto->getId(),
+            $dto->getStorageType(),
             $storage->upload($dto->getPath(), $fileName),
             $fileName,
             $dto->getSize(),

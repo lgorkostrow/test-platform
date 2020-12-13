@@ -23,6 +23,13 @@ class File
     /**
      * @var string
      *
+     * @ORM\Column(type="string", length=40)
+     */
+    private string $storage;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(type="string", length=255)
      */
     private string $path;
@@ -34,9 +41,10 @@ class File
      */
     private MetaData $metaData;
 
-    public function __construct(string $id, string $path, MetaData $metaData)
+    public function __construct(string $id, string $storage, string $path, MetaData $metaData)
     {
         $this->id = $id;
+        $this->storage = $storage;
         $this->path = $path;
         $this->metaData = $metaData;
     }
@@ -44,5 +52,10 @@ class File
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getStorage(): string
+    {
+        return $this->storage;
     }
 }

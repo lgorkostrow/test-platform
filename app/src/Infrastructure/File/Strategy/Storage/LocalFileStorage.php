@@ -6,21 +6,36 @@ namespace App\Infrastructure\File\Strategy\Storage;
 
 use App\Domain\File\Enum\StorageTypeEnum;
 use App\Domain\File\Storage\FileStorageInterface;
+use App\Domain\File\Utils\FileUtils;
 use RuntimeException;
+use Symfony\Component\Asset\Packages;
 use Symfony\Component\HttpFoundation\File\File;
 
 class LocalFileStorage implements FileStorageInterface
 {
     private string $fileDir;
 
-    public function __construct(string $fileDir)
+    private string $publicDir;
+
+    private Packages $assets;
+
+    public function __construct(string $fileDir, string $publicDir, Packages $assets)
     {
         $this->fileDir = $fileDir;
+        $this->publicDir = $publicDir;
+        $this->assets = $assets;
     }
 
     public function supports(string $storageType): bool
     {
         return StorageTypeEnum::LOCAL === $storageType;
+    }
+
+    public function buildFullPath(string $path): string
+    {
+        return $this->assets->getUrl(
+            FileUtils::getRelativePath($this->publicDir, $path)
+        );
     }
 
     public function upload(string $path, string $fileName): string

@@ -141,7 +141,7 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
         $attachments = $this->_em->createQueryBuilder()
             ->select(
                 sprintf(
-                    'NEW %s(a.id, a.featured, file.path)',
+                    'NEW %s(a.id, a.featured, file.storage, file.path)',
                     AttachmentView::class,
                 )
             )
@@ -161,7 +161,7 @@ class AdvertisementRepository extends AbstractDoctrineRepository implements Adve
         return $this->_em->createQueryBuilder()
             ->select(
                 sprintf(
-                    'NEW %s(a.id, a.description.title, a.state, category.id, category.name, a.price.value, a.price.currency, file.path)',
+                    'NEW %s(a.id, a.description.title, a.state, category.id, category.name, a.price.value, a.price.currency, file.id, file.storage, file.path)',
                     AdvertisementListItemView::class,
                 )
             )

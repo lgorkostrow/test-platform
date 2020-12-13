@@ -22,6 +22,10 @@ class AdvertisementListItemView
 
     private string $currency;
 
+    private ?string $fileId;
+
+    private ?string $fileStorage;
+
     private ?string $featuredImage;
 
     public function __construct(
@@ -32,6 +36,8 @@ class AdvertisementListItemView
         string $categoryName,
         float $price,
         string $currency,
+        ?string $fileId,
+        ?string $fileStorage,
         ?string $featuredImage
     ) {
         $this->id = $id;
@@ -41,6 +47,8 @@ class AdvertisementListItemView
         $this->categoryName = $categoryName;
         $this->price = $price;
         $this->currency = $currency;
+        $this->fileId = $fileId;
+        $this->fileStorage = $fileStorage;
         $this->featuredImage = $featuredImage;
     }
 
@@ -77,6 +85,16 @@ class AdvertisementListItemView
     public function getCurrency(): string
     {
         return $this->currency;
+    }
+
+    public function getFileId(): ?string
+    {
+        return $this->fileId;
+    }
+
+    public function getFileStorage(): ?string
+    {
+        return $this->fileStorage;
     }
 
     public function getFeaturedImage(): ?string

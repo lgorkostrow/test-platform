@@ -9,6 +9,12 @@ parameters:
     frontend_urls:
         user_verification: '%env(USER_VERIFICATION_URL)%'
         new_user_email_verification: '%env(NEW_USER_EMAIL_VERIFICATION_URL)%'
+    amazon.s3.key: '%env(AWS_KEY)%'
+    amazon.s3.secret: '%env(AWS_SECRET)%'
+    amazon.s3.bucket: '%env(AWS_BUCKET)%'
+    amazon.s3.region: '%env(AWS_REGION)%'
+    amazon.s3.version: '%env(AWS_VERSION)%'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -96,10 +102,18 @@ services:
     App\Domain\Currency\Manager\ExchangeRatesManager:
         arguments:
             $strategies: !tagged app.strategy.exchange_rate_provider
+
     # strategies
     App\Infrastructure\File\Strategy\Storage\LocalFileStorage:
         arguments:
             $fileDir: '%file_dir%'
+            $publicDir: '%public_dir%'
+        tags:
+            - { name: app.strategy.content_storage }
+
+    App\Infrastructure\File\Strategy\Storage\S3FileStorage:
+        arguments:
+            $bucket: '%amazon.s3.bucket%'
         tags:
             - { name: app.strategy.content_storage }
 
@@ -108,17 +122,23 @@ services:
             $apiUrl: '%env(PB_EXCHANGE_RATES_PROVIDER_URL)%'
         tags:
             - { name: app.strategy.exchange_rate_provider }
+
     # serializer
     Symfony\Component\Serializer\Normalizer\DateTimeNormalizer:
         tags:
             - { name: serializer.normalizer, priority: 5 }
 
     App\Application\Serializer\FileNormalizer:
-        arguments:
-            $publicDir: '%public_dir%'
         tags:
             - { name: serializer.normalizer, priority: 2 }
 
     App\Application\Serializer\UploadedFileDenormalizer:
         tags:
             - { name: serializer.normalizer, priority: 2 }
+
+    amazon_s3:
+        class: Aws\S3\S3Client
+        arguments:
+            - {credentials: { key: "%amazon.s3.key%", secret: "%amazon.s3.secret%" }, region: "%amazon.s3.region%", version: "%amazon.s3.version%"}
+
+    Aws\S3\S3ClientInterface: '@amazon_s3'

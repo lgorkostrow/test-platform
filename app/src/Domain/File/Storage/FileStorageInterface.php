@@ -6,5 +6,7 @@ interface FileStorageInterface
 {
     public function supports(string $storageType): bool;
 
+    public function buildFullPath(string $path): string;
+
     public function upload(string $path, string $fileName): string;
 }
